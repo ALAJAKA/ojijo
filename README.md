@@ -50,7 +50,8 @@
   미정
   
 -데이터 테이블(users,board)
-  
+
+  ```
 create table users(
     id int primary key auto_increment,
     user_id varchar(20) unique,
@@ -72,4 +73,6 @@ create table board(
     bd_updateDate datetime,
     user_nk varchar(20)
 );
+```
+
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 페이지</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap-grid.css">
+  <link rel="stylesheet" href="css/bootstrap-reboot.css">
+  <link rel="stylesheet" href="css/bootstrap-utilities.css">
+  <link rel="stylesheet" href="css/bootstrap-utilities.rtl.css">
+  <script src="js/bootstrap.bundle.js"></script>
+  <script src="js/bootstrap.esm.js"></script>
+  <script src="js/bootstrap.js"></script>
+</head>
+<style>
+  #join{margin-left: 30%; margin-top:100px; width:100%;}
+  #logo{margin-left: 30%; margin-top:50px;width:100%; height:150px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
+  #btnbox{float: right}
+</style>
+
+<body>
+<div id="wrap">
+  <div class="container">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <nav>
+        <div id="logo" style="">
+        </div>
+      </nav>
+      <form id = "join">
+        <div class="mb-3">
+          <input style="height:50px" type="email" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="아이디를 입력해 주세요.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="password" class="form-control" id="userPassword" placeholder="패스워드를 입력해 주세요.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="password" class="form-control" id="userPassword2" placeholder="패스워드확인.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="text" class="form-control" id="name" placeholder="이름을 입력해 주세요.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="전화번호를" class="form-control" id="phoneNumber" placeholder="전화번호를 입력해 주세요.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="password" class="form-control" id="address" placeholder="주소를 입력해 주세요.">
+        </div>
+        <div class="mb-3">
+          <input style="height:50px"  type="password" class="form-control" id="email" placeholder="email주소를 입력해 주세요.">
+        </div>
+        <div id="btnbox">
+          <button type="submit" class="btn btn-primary">회원가입</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+</body>
+</html>

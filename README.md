@@ -4,18 +4,24 @@
 
 기한 : 2022년 12/2 ~ 12/8일까지
 
+
 팀명 : 오지죠
 
-팀장 : 정성욱
-      ㄴ담당 페이지 : 마이페이지
-팀원 : 김민수
-      ㄴ담당 페이지 : 게시글 상세보기 페이지
-팀원 : 박종수
-      ㄴ담당 페이지 : 게시글 작성 및 수정 페이지
-팀원 : 이재관
-      ㄴ담당 페이지 : 개인 정보 수정 페이지
-팀원 : 표정훈
-      ㄴ담당 페이지 : 메인 페이지
+
+팀장 : 정성욱<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ㄴ담당 페이지 : 마이페이지      
+
+팀원 : 김민수<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ㄴ담당 페이지 : 게시글 상세보기 페이지
+      
+팀원 : 박종수<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ㄴ담당 페이지 : 게시글 작성 및 수정 페이지
+      
+팀원 : 이재관<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ㄴ담당 페이지 : 개인 정보 수정 페이지
+      
+팀원 : 표정훈<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ㄴ담당 페이지 : 메인 페이지
 
 ### 구현 요구 사항
 
@@ -44,7 +50,8 @@
   미정
   
 -데이터 테이블(users,board)
-  
+
+  ```
 create table users(
     id int primary key auto_increment,
     user_id varchar(20) unique,
@@ -66,4 +73,6 @@ create table board(
     bd_updateDate datetime,
     user_nk varchar(20)
 );
+```
+
 

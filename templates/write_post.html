@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="result3">새 글 작성</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <link href="../static/write_post.css" rel="stylesheet">
+
+
+    <script>
+        function bdScroll(obj) {
+            obj.style.height = '2px';
+            obj.style.height = (12 + obj.scrollHeight) + 'px';
+            obj.style.maxHeight = '1050px';
+        }
+
+        function CancelW() {
+            if (!confirm("그만 하시겠습니까 ?")) {
+
+            } else {
+                alert("이전 페이지로")
+            }
+        }
+
+        function bd_save() {
+            let bd_title = $("#bd_title").val();
+            let bd_content = $("#bd_content").val();
+
+            if (bd_title == "") {
+                return alert('제목을 입력해 주세요.')
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/bd_post",
+                data: {'bd_title_give': bd_title,
+                    'bd_content_give': bd_content},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+//업데이트
+//        function bd_up() {
+//            let bd_title = $('#bd_title').val();
+//            let bd_contnet = $("#bd_content").val();
+//            if (bd_title == "") {
+//                return alert('제목을 입력해 주세요.')
+//            }
+//            $.ajax({
+//                type: "POST",
+//                url: "/bd_post/up",
+//                data: {'bd_title_give': bd_title,
+//                'bd_content_give': bd_contnet},
+//                success: function (response) {
+//                   alert(response['msg'])
+//                    window.location.reload()
+//                }
+//            });
+//        }
+
+
+    </script>
+</head>
+
+<body>
+<div class="container">
+    <div class="Write">
+        <div><textarea class="WriteT" id="bd_title" onkeyup="print_bd_t()" onkeydown="bdScroll(this)" type="text"
+                       placeholder="제목을 입력하세요" maxlength="50"></textarea>
+        </div>
+        <div><textarea class="WriteC" id="bd_content" onkeyup="print_bd_c()" onkeydown="bdScroll(this)" type="text"
+                       placeholder="당신의 이야기를 적어보세요 .." maxlength="8000"></textarea>
+        </div>
+        <div class="WriteBtn">
+            <button class="WB1" onclick="CancelW()">←나가기</button>
+            <button class="WB2" onclick="bd_save()">출간하기</button>
+            <button class="WB3" onclick="bd_up()">수정하기</button>
+        </div>
+    </div>
+    <div class="Preview">
+        <div id="result" class="PreviewT" type="text" placeholder="미리보기 제목" maxlength="50"></textarea>
+        </div>
+        <div id="result2" class="PreviewC" type="text" placeholder="미리보기 이야기" maxlength="3000"></textarea>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function print_bd_t() {
+        const bd_title = document.getElementById('bd_title').value;
+        document.getElementById("result").innerText = bd_title;
+        document.getElementById("result3").innerText = "(작성중) " + bd_title
+    }
+
+    function print_bd_c() {
+        const bd_content = document.getElementById('bd_content').value;
+        document.getElementById("result2").innerText = bd_content
+    }
+</script>
+</html>

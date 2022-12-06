@@ -26,10 +26,9 @@
         }
 
         function CancelW() {
-            if (!confirm("그만 하시겠습니까 ?")) {
+            if (confirm("그만 하시겠습니까 ?") == true) {
+                location.href='board.html'
 
-            } else {
-                alert("이전 페이지로")
             }
         }
 
@@ -53,25 +52,6 @@
             });
         }
 
-//업데이트
-//        function bd_up() {
-//            let bd_title = $('#bd_title').val();
-//            let bd_contnet = $("#bd_content").val();
-//            if (bd_title == "") {
-//                return alert('제목을 입력해 주세요.')
-//            }
-//            $.ajax({
-//                type: "POST",
-//                url: "/bd_post/up",
-//                data: {'bd_title_give': bd_title,
-//                'bd_content_give': bd_contnet},
-//                success: function (response) {
-//                   alert(response['msg'])
-//                    window.location.reload()
-//                }
-//            });
-//        }
-
 
     </script>
 </head>
@@ -88,7 +68,6 @@
         <div class="WriteBtn">
             <button class="WB1" onclick="CancelW()">←나가기</button>
             <button class="WB2" onclick="bd_save()">출간하기</button>
-            <button class="WB3" onclick="bd_up()">수정하기</button>
         </div>
     </div>
     <div class="Preview">

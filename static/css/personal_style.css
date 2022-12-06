@@ -1,0 +1,202 @@
+* {
+    font-family: 'Jua', sans-serif;
+    box-sizing: inherit;
+}
+
+body {
+    overflow-y: initial;
+    height: 100%;
+    padding-bottom: 4rem;
+}
+
+/*  ---------------------- title -------------------------*/
+.mytitle {
+    height: 4rem;
+}
+
+.mytitle_nav {
+    width: 1728px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+@media (max-width: 1919px) {
+    .mytitle_nav {
+        width: 1376px;
+    }
+}
+@media (max-width: 1440px) {
+    .mytitle_nav {
+        width: 1024px;
+    }
+}
+.mytitle_left {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+.mytitle_left .team_logo {
+    margin-right: 16px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+.mytitle_left .user_logo {
+    display: block;
+    max-width: calc(100vw - 200px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.mytitle_right {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+}
+
+.mytitle_right > button {
+    height: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1.2rem;
+    border-radius: 1rem;
+    outline: none;
+    margin-right: 1.25rem;
+    cursor: pointer;
+}
+
+/*  ---------------------- main -------------------------*/
+
+/*  ------------------- profile box ---------------------*/
+.main_box {
+    width: 768px;
+    margin-top: 5.625rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.profile {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.profile > a > img {
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: rgb(0 0 0 / 6%) 0px 0px 4px 0px;
+}
+
+.profile_text {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    margin-left: 1rem;
+}
+
+.name {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: bold;
+}
+
+.discription {
+    white-space: pre-wrap;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    margin-top: 0.25rem;
+    letter-spacing: -0.004em;
+}
+
+.line {
+    background: lightgray;
+    width: 100%;
+    height: 1px;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.icon {
+    display: flex;
+}
+
+.icon > a {
+    margin-left: 1rem;
+}
+
+.icon > a > img {
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+}
+
+/*  ------------------- main contents ---------------------*/
+.contents {
+    border-bottom: 1px solid #f1f3f5;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    line-height: 1.5;
+}
+
+.content_img {
+    padding-top: 52.356%;
+    width: 100%;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.content_img > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.contents > a {
+    font-size: 1.65rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.contents > p {
+    font-family: normal;
+    display: block;
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    color: #495057;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.subinfo {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    color: #868e96;
+    font-size: 0.875rem;
+}

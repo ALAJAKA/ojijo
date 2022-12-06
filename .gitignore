@@ -3,3 +3,4 @@ readme.md
 *.xml
 
 node_modules/
+static/plugin/

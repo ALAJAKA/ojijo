@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/board_main.css" />
+    <noscript><link rel="stylesheet" href="../static/css/board_noscript.css" /></noscript>
+    <title>Document</title>
+</head>
+
+<body class="is-preload">
+
+<!-- Wrapper -->
+    <div id="wrapper" style="margin-bottom: 100px;">
+
+        <!-- Header -->
+        <header id="header" class="alt">
+            <div class="logo"><img src="../static/board_images/basic_img/default_profile.png" alt="" /></div>
+            <h1 id="nick-name" style="font-size: 50px; font-weight: bold">{{detailDict["detail"]["user_nk"]}}</h1>
+            <p id="blog-and-email"><a id="blog-url">{{detailDict["detail"]["user_site"]}}</a><br />
+            email : <span>{{detailDict["detail"]["user_email"]}}</span></p>
+            <span id="user-fp">{{detailDict["detail"]["user_fp"]}}</span>
+        </header>
+
+        <!-- Main -->
+        <div id="main">
+            <!-- Content -->
+            <section id="content" class="main" style="min-height: 800px; margin-bottom: 150px;">
+                <p id="main-title">{{detailDict["detail"]["bd_title"]}}</p>
+                <p id="writer">{{detailDict["detail"]["user_nk"]}}</p>
+                <p id="post-content" style="color: black;"></p>
+            </section>
+
+            <!-- 이전 글, 다음 글 -->
+            <section id="before-after-wrap">
+                <div id="before-after">
+                    <div id="before-post"><span>제목 </span> ⇦ 이전글</div>
+                    <div id="next-post">다음글 ⇨ <span> 제목</span></div>
+                </div>
+            </section>
+
+            <!-- 댓글 -->
+            <section class="main">
+                <form method="post" action="#">
+                    <div class="row gtr-uniform">
+                        <div class="col-12">
+                            <textarea name="demo-message" id="demo-message" id="submit-comment"
+                                      placeholder="Enter your message" rows="6" style="height:150px;"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-secondary">댓글 달기</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- 댓글 목록 -->
+            <section class="main" id="comments-wrap">
+                <div class="comment-box">
+                    <div class="comment-box-profile">
+                        <img src="">
+                        <div>dd</div>
+                    </div>
+                    <div class="comment-box-content">코멘트 내용</div>
+                    <div class="comment-box-replyBtn">답글 달기</div>
+                </div>
+            </section>
+
+    </div>
+
+    <!-- 삭제 버튼 -->
+    <div class="delete-board">
+        <button type="button" class="btn btn-success">게시글 수정 하기</button>
+        <button type="button" class="btn btn-danger" onclick="delete_board()">게시글 삭제 하기</button>
+    </div>
+
+
+    <script src="../static/js/board_jquery.min.js"></script>
+    <script src="../static/js/board_jquery.scrollex.min.js"></script>
+    <script src="../static/js/board_jquery.scrolly.min.js"></script>
+    <script src="../static/js/board_browser.min.js"></script>
+    <script src="../static/js/board_breakpoints.min.js"></script>
+    <script src="../static/js/board_util.js"></script>
+    <script src="../static/js/board_main.js"></script>
+
+</body>
+
+
+
+<script>
+    $(document).ready(function () {
+        const dict = '{{detailDict["detail"]["title"]}}'
+        console.log(dict);
+        show_content()
+        get_next_and_before_post();
+        show_comment_list();
+    });
+
+    const show_content = () => {
+        const before_content = `{{detailDict['detail']['bd_content']}}`
+        const after_content = before_content.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+        $("#post-content").append(after_content);
+
+        // 블로그 주소가 등록 되어 있냐 없냐.
+        const user_site = `{{detailDict['detail']['user_site']}}`
+        if (user_site === "None") {
+            $("#blog-url").attr("style", "display:none;")
+        } else {
+            if (user_site.includes("http://") === false) {
+                $("#blog-url").attr("href", "http://" + user_site)
+            }
+        }
+
+        // 소개글이 있냐 없냐
+        const user_fp = `{{detailDict['detail']['user_fp']}}`
+        if (user_fp === "None") {
+            $("#user-fp").attr("style", "display:none;")
+        }
+
+        const before_imgObj = `{{detailDict['images']}}`    // [{}, {}]
+        if (before_imgObj[0] === "[") {
+            const after_imgObj = eval(before_imgObj.replace(/&#39;/g, "'")) // 특수문자들을 원래의 문자로 되돌린 후 문자열을 코드로 인식하게 바꿔줌.
+
+            const all_img = document.querySelectorAll("#post-content img");
+
+            for (let i = 0; i < after_imgObj.length; i++) {
+                const img_obj = after_imgObj[i]
+                const path = `../static/posting_images/${img_obj["user_nk"]}/board_${img_obj["board_id"]}/${img_obj["image"]}`
+                console.log('path : ' + path)
+                all_img[`${i}`].src = path;
+                all_img[`${i}`].style.maxWidth = "100%";
+            }
+        } else {
+            return
+        }
+    }
+
+    const get_next_and_before_post = () => {
+        const now_user_nk = '{{detailDict["detail"]["user_nk"]}}'
+        const now_post_id = '{{detailDict["detail"]["id"]}}'
+
+        $.ajax({
+            type: "POST",
+            url: "/board/page",
+            data: { user_nk_give: now_user_nk, post_id_give: now_post_id },
+            success: function (response) {
+                console.log(response["msg"])
+                console.log(response["result"]) // {"after": [{]], "before": [{}]}  [] = [{"id": 10}]
+
+                const before = response["result"]["before"]
+                const after = response["result"]["after"]
+
+                console.log(`비교하자!  before : ${before[0]}, after : ${after}`)
+
+                const before_after_div = document.querySelector("#before-after")
+                const before_div = document.querySelector("#before-post")
+                const after_div = document.querySelector("#next-post")
+
+                if (before[0] != null || before[0] != undefined) {
+                    before_div.addEventListener('click', () => { location.href=`/detail?post=${before[0]["id"]}` })
+                    before_div.querySelector("span").innerText = before[0]["bd_title"];
+                } else {
+                    console.log('before 없으니 else 실행')
+                    before_div.style.display = "none"
+                    before_after_div.style.gridTemplateColumns = "40%"
+                }
+
+                if (after[0] != null || after[0] != undefined) {
+                    after_div.addEventListener('click', () => { location.href=`/detail?post=${after[0]["id"]}` })
+                    after_div.querySelector("span").innerText = after[0]["bd_title"];
+                } else {
+                    console.log('after 없으니 else 실행')
+                    after_div.style.display = "none"
+                    before_after_div.style.gridTemplateColumns = "40%"
+                }
+
+
+            }
+        });
+    }
+
+    const show_comment_list = () => {
+
+    }
+
+    // 삭제 버튼 클릭 시 해당 게시글을 삭제
+    const delete_board = () => {
+        const check = confirm("해당 게시글을 삭제 하시겠습니까?");
+
+        if (check) {
+            const board_id = "{{detailDict['detail']['id']}}"
+            $.ajax({
+                type: "POST",
+                url: "/board/del",
+                data: {board_id_give: board_id },
+                success: function (response) {
+                    if (response["msg"] === 1) {
+                        alert("삭제 완료")
+                        location.href="/";
+                    }
+                }
+            });
+        }
+    }
+
+
+</script>
+</html>

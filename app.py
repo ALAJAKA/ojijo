@@ -14,7 +14,7 @@ curs = db.cursor()
 #메인페이지
 @app.route("/", methods=["GET"])
 def home():
-  return render_template('index.html')
+  return render_template('pyo_main.html')
 
 
 if __name__ == '__main__':

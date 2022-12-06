@@ -26,7 +26,9 @@
         }
 
         function CancelW() {
-            if (!confirm("그만 하시겠습니까 ?")) {
+            if (confirm("그만 하시겠습니까 ?") == true) {
+                location.href='board.html'
+
             }
         }
 

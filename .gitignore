@@ -1,2 +1,5 @@
 venv/
 readme.md
+*.xml
+
+node_modules/

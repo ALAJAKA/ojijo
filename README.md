@@ -65,6 +65,10 @@
 -데이터 테이블(users,board)
 
   ```
+create database ojijo;
+
+use ojijo;
+
 create table users(
     id int primary key auto_increment,
     user_id varchar(20) unique,
@@ -86,6 +90,8 @@ create table board(
     bd_updateDate datetime,
     user_nk varchar(20)
 );
+
+alter table board add constraint foreign key(user_nk)references users(user_nk);
 ```
 
 

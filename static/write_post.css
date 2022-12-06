@@ -81,6 +81,21 @@ body {
     font-size: 20px;
 }
 
+.WB3 {
+    background-color: green;
+    color: white;
+
+    outline: none;
+    border: 0;
+    border-radius: 10px;
+
+    float: right;
+    margin: 25px;
+
+    font-size: 20px;
+}
+
+
 .Preview {
     float: right;
     width: 50%;

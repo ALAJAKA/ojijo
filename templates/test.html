@@ -1,0 +1,20 @@
+#업데이트
+        function bd_up() {
+            let bd_title = $('#bd_title').val();
+            let bd_contnet = $("#bd_content").val();
+            if (bd_title == "") {
+                return alert('제목을 입력해 주세요.')
+            }
+            $.ajax({
+                type: "POST",
+                url: "/bd_post/up",
+                data: {'bd_title_give': bd_title,
+                'bd_content_give': bd_contnet},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+

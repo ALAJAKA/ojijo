@@ -1,7 +1,8 @@
-{% extends "layout.html" %}
-{% block title %}메인페이지{% endblock %}
-{% block head %}
-    {{ super() }}
+{% extends "layout.html" %} {# 부모껀 다 내꺼 부모는 extends 한 것 #}
+{% block title %}메인페이지{% endblock %} {# 그냥 실행 시키면 jija2예가 이걸 이걸 실행 안 시켜줘서 다 망가짐 #}
+{% block head %}{# 헤더 내용 #}
+    {{ super() }}{# 부모 헤더 가져오기 #}
+    {# 부모에 없는 헤더 내용 추가 작성 #}
     <style>
     /* 게시물(.card)   */
     .card {
@@ -84,8 +85,8 @@
     }
 
 </script>
-{% endblock %}
-{% block content %}
+{% endblock %}{# 헤더 끝 #}
+{% block content %}{# 내꺼 내용 시작 #}
 
 <!-- 게시물 -->
 <div class="card" style="width: 18rem;" onclick="location.href='/board' ">
@@ -160,4 +161,4 @@
         <p class="nick">닉네임</p>
     </div>
 </div>
-{% endblock %}
+{% endblock %}{# 내꺼 내용 끝 layout 110~112에 내꺼 삽입됨 #}

@@ -25,6 +25,7 @@
 <body>
   <div id="wrap">
     <div class="container">
+{#        부트스트랩에서는 가로를 12등분함#}
       <div class="col-md-3"></div>
       <div class="col-md-6">
         <nav>
@@ -33,13 +34,13 @@
         </nav>
         <form id = "loginPw" action="/login" method="post">
           <div class="mb-3">
-            <input style="height:50px"name="user_id" type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="아이디를 입력해 주세요.">
+            <input style="height:50px"name="user_id" type="text" class="form-control" id="userId" placeholder="아이디를 입력해 주세요.">
           </div>
           <div class="mb-3">
             <input style="height:50px"name="password"  type="password" class="form-control" id="userPassword" placeholder="패스워드를 입력해 주세요.">
           </div>
           <div id="btnbox">
-            <button type="submit" class="btn btn-primary">로그인</button>
+            <button type="submit" class="btn btn-primary">로그인</button> <!--submit은 무조껀 post다-->
             <button type="button" class="btn btn-primary" onclick="location.href='/join' ">회원가입</button>
           </div>
         </form>

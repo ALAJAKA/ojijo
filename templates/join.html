@@ -14,13 +14,26 @@
   <script src="../static/js/bootstrap.js"></script>
 </head>
 <style>
+{#
+    선택자
+    #은 html id 일 때    id 중복이 불가
+    .은 html class 일 때  class는 중복이 가능
+    button(태그) 모든 button태그를 수정할 때
+    선택자:hover 마우스를 올렸을때 js의 mouseOver
+    선택자:nth-of-type(숫자)  숫자 1부터시작 태그의 특정 순서의 스타일만 변경하고 싶을 때 사용
+   #}
   #join{margin-left: 30%; margin-top:100px; width:100%;}
   #logo{margin-left: 30%; margin-top:50px;width:100%; height:150px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
   #btnbox{float: right}
 </style>
 <script>
+    {# 제이쿼리 시작시 무조껀 필요하다고 알고 있음 걍 외워야함 #}
    $(document).ready(function (){
+    {#   함수를 실행할때 함수명()#}
     });
+    {# 제이쿼리르 사용하는 이유는 그냥 줄이려고 #}
+   {#let a = document.getElementById("a");#}
+   {#$("#a")#}
     function userJoin() {
         let user_id = $('#userId').val();
         let password = $('#userPassword').val();
@@ -28,6 +41,7 @@
         let name = $('#name').val();
         let email = $('#email').val();
         let user_nk = $('#nk').val();
+        {# !== , === 이것으 데이터 타입까지 완전히 일치할대 #}
         if(password !== password2){
             return alert("비밀번호와 비밀번호 확인 입력값이 다릅니다.");
         }
@@ -42,7 +56,9 @@
                 nk : user_nk
                 },
             success: function (response) {
+                //가입 완료 메시지 띄워주기
                 alert(response['msg'])
+                //로그인 화면으로 보내주기
                 window.location.href="/login"
             }
         });
@@ -60,7 +76,7 @@
       </nav>
       <form id = "join">
         <div class="mb-3">
-          <input style="height:50px" type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="아이디를 입력해 주세요.">
+          <input style="height:50px" type="text" class="form-control" id="userId"  placeholder="아이디를 입력해 주세요.">
         </div>
         <div class="mb-3">
           <input style="height:50px"  type="password" class="form-control" id="userPassword" placeholder="패스워드를 입력해 주세요.">

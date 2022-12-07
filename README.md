@@ -72,7 +72,7 @@ use ojijo;
 create table users(
     id int primary key auto_increment,
     user_id varchar(20) unique,
-    user_pw varchar(20) not null ,
+    user_pw varchar(100) not null ,
     user_name varchar(20) not null ,
     user_site varchar(50),
     user_email varchar(50),

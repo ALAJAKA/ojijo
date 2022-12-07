@@ -1,76 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>메인 페이지</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/bootstrap-grid.css">
-    <link rel="stylesheet" href="css/bootstrap-reboot.css">
-    <link rel="stylesheet" href="css/bootstrap-utilities.css">
-    <link rel="stylesheet" href="css/bootstrap-utilities.rtl.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="js/bootstrap.bundle.js"></script>
-    <script src="js/bootstrap.esm.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="//code.jquery.com/jquery.min.js"></script>
-    <script src="https://kit.fontawesome.com/f1e32eaf40.js" crossorigin="anonymous"></script>
-</head>
-<style>
-    /* 노멀라이징 */
-    * {
-        margin: 0;
-    }
-
-    html, body {
-        height: 100%;
-        width: 100%;
-    }
-
-    /* 탑 메뉴 */
-    .top-menu {
-        display: flex;
-        justify-content: space-between;
-        align-itmes: center;
-        width: 100%;
-        padding: 30px;
-    }
-
-    .top-left {
-        font-size: 2rem;
-        display: inline-block;
-        justify-content: flex-start;
-
-    }
-
-    .top-right {
-        vertical-align: top;
-        display: inline-block;
-        justify-content: flex-end;
-    }
-
-    /* 버튼 */
-    .btn {
-        font-size: 0.8rem;
-        border-radius: 20px;
-    }
-
-    .btn:hover {
-        opacity: 0.9;
-    }
-
-    .fa-sun {
-        display: inline-block;
-        font-size: 1.5rem;
-        vertical-align: middle;
-        margin-right: 10px;
-    }
-
-    .fa-sun:hover {
-        color: red;
-        cursor: pointer;
-    }
-
+{% extends "layout.html" %} {# 부모껀 다 내꺼 부모는 extends 한 것 #}
+{% block title %}메인페이지{% endblock %} {# 그냥 실행 시키면 jija2예가 이걸 이걸 실행 안 시켜줘서 다 망가짐 #}
+{% block head %}{# 헤더 내용 #}
+    {{ super() }}{# 부모 헤더 가져오기 #}
+    {# 부모에 없는 헤더 내용 추가 작성 #}
+    <style>
     /* 게시물(.card)   */
     .card {
         display: inline-block;
@@ -128,50 +61,7 @@
 
 </style>
 <script>
-    <!--  로그인하면 보여줌 (GET)  -->
-        $(document).ready(function (){
-                show_order();
-        });
-
-        function show_order() {
-        $.ajax({
-            type: 'GET',
-            url: '/test',
-            data: {},
-            success: function (response) {
-            let rows = response['orders']
-            for (let i = 0; i < rows.length; i++){
-                let bd_title = rows[i]['bd_title']
-                let bd_content = rows[i]['bd_content']
-                let user_nk = rows[i]['user_nk']
-
-                let temp_html =`<h3 class="card-title">${bd_title}</h3>
-                                <p class="card-text">${bd_content}</p>
-                                <hr>
-                                <p class="nick">${user_nk}</p>`
-                $('.card-body').append(temp_html)
-            }
-
-            }
-        });
-    }
-
-    <!-- 로그인에 붙여둠 (POST)  -->
-    function test_post() {
-        let bd_title = $('.card-title').val()
-        let bd_content = $('.card-content').val()
-        let user_nk = $('.nick').val()
-
-        $.ajax({
-            type: 'POST',
-            url: '/test',
-            data: { bd_title_give: bd_title, bd_content_give: bd_content, user_nk_give: user_nk  },
-            success: function (response) {
-                alert(response['msg'])
-                window.location.reload()
-            }
-        });
-    }
+//  로그인하면 보여줌 (GET)
 
     <!-- 흑백반전 -->
     var toggle = 0;
@@ -195,31 +85,11 @@
     }
 
 </script>
-
-<body>
-<!-- 상단 메뉴-->
-<nav class="top-menu">
-    <!-- 탑바 왼쪽 -->
-    <a href="#">
-        <div class="top-left"><i class="fa-solid fa-user-secret"></i> 5JIJO <i class="fa-solid fa-user-secret"></i>
-        </div>
-    </a>
-
-    <!-- 탑바 오른쪽 -->
-    <div class="top-right">
-        <!-- 쓸모없는 이모지-->
-        <i class="fa-regular fa-sun" onclick="change_color()"></i>
-
-        <button type="button" class="btn btn-dark" onclick="location.href='personal.html' ">내 오지조</butto>
-        <button type="button" class="btn btn-dark" onclick="location.href='write_post.html' ">글쓰기</button>
-        <button type="button" class="btn btn-dark" onclick="location.href='login.html' ">로그인</button>
-        <button type="button" class="btn btn-dark" onclick="location.href='mypage.html' ">설정</button>
-    </div>
-</nav>
-
+{% endblock %}{# 헤더 끝 #}
+{% block content %}{# 내꺼 내용 시작 #}
 
 <!-- 게시물 -->
-<div class="card" style="width: 18rem;" onclick="location.href='board.html' ">
+<div class="card" style="width: 18rem;" onclick="location.href='/boards/20' ">
     <img src="../static/picture/01.jpg" class="card-img-top" alt="이미지">
     <div class="card-body">
         <h3 class="card-title">제목은 길어야 제맛이지</h3>
@@ -291,8 +161,4 @@
         <p class="nick">닉네임</p>
     </div>
 </div>
-
-
-</div>
-</body>
-</html>
+{% endblock %}{# 내꺼 내용 끝 layout 110~112에 내꺼 삽입됨 #}

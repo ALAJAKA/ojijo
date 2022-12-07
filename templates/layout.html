@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%block head %}
+    <meta charset="UTF-8">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Jua&family=Noto+Serif+KR:wght@200&display=Gowun+Dodum&display=swap"
+    rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f1e32eaf40.js" crossorigin="anonymous"></script>
+    <title>{% block title%}{% endblock %}</title>
+    {% endblock %}
+
+</head>
+<style>
+    /* 노멀라이징 */
+    * {
+        margin: 0;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
+    /* 탑 메뉴 */
+    .top-menua {
+        display: flex;
+        justify-content: space-between;
+        align-itmes: center;
+        width: 100%;
+        padding: 30px;
+    }
+
+    .top-lefta {
+        font-size: 2rem !important;
+        display: inline-block !important;
+        justify-content: flex-start;
+        color:black;
+
+    }
+
+    .top-right {
+        vertical-align: top;
+        display: inline-block !important;
+        justify-content: flex-end !important;
+    }
+
+    /* 버튼 */
+    .btnnav {
+        font-size: 0.8rem !important;
+        border-radius: 20px !important;
+    }
+
+    .btnnav:hover {
+        opacity: 0.9;
+    }
+
+    .fa-sun {
+        display: inline-block !important;
+        font-size: 1.5rem !important;
+        vertical-align: middle !important;
+        margin-right: 10px !important;
+    }
+
+    .fa-regular{
+        color: black;
+
+        font-size: 1.5rem !important;
+    }
+    .fa-sun:hover {
+        color: red;
+        cursor: pointer;
+        font-size: 1.5rem !important;
+    }
+    .fa-solid {
+        color:black;
+    {#  !important 다른 css를 무시하고 이거로 적용한다.#}
+        font-size: 1.5rem !important;
+    }
+</style>
+<body>
+<nav class="top-menua">
+     <a href="/">
+        <div class="top-lefta">
+            {# 폰트어썸 찾아보기 아이콘이미지를 글자로 넣는법 #}
+            <i class="fa-solid fa-user-secret"></i> 5JIJO <i class="fa-solid fa-user-secret"></i>
+        </div>
+    </a>
+
+    <!-- 탑바 오른쪽 -->
+    <div class="top-right">
+        <!-- 쓸모없는 이모지-->
+        <i class="fa-regular fa-sun" onclick="change_color()"></i>
+        {#session['user_nk]는 app.py에서 가져오는데 login함수 69번 라인 참고  #}
+        {% if session['user_nk'] %} {# session에 값이 있으면 각각 페이지로 가는 링크가 있는 버튼보여주기 #}
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/personal' ">내 오지조</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/write' ">글쓰기</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/logout' ">로그아웃</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/mypage' ">설정</button>
+        {% else  %}{# session에 값이 없으면 버튼누르면 다 로그인페이지로 #}
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/login' ">내 오지조</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/login' ">글쓰기</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/login' ">로그인</button>
+        <button type="button" class="btnnav btn-dark" onclick="location.href='/login' ">설정</button>
+        {% endif %}{# if문이 끝났으면 end로 닫아줘야한다 이것들은 jinja2문법 #}
+
+    </div>
+</nav>
+<div id="content">
+{% block content %}{# 부모 재산 다 받았지만 내 것도 두는 공간 #}
+
+{% endblock %}{#  내 재산 채우기 완료 #}
+</div>
+</body>

@@ -3,40 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
-  <link rel="stylesheet" href="../static/css/bootstrap.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-grid.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-reboot.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-utilities.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-utilities.rtl.css">
-  <script src="../static/js/bootstrap.bundle.js"></script>
-  <script src="../static/js/bootstrap.esm.js"></script>
-  <script src="../static/js/bootstrap.js"></script>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Jua&family=Noto+Serif+KR:wght@200&display=Gowun+Dodum&display=swap"
+          rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 </head>
 <style>
   #loginPw{margin-left: 30%; margin-top:100px; width:100%;}
   #logo{margin-left: 30%; margin-top:50px;width:100%; height:150px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
   #btnbox{float: right}
 </style>
+<script>
+     $(document).ready(function (){
+    });
+</script>
 
 <body>
   <div id="wrap">
     <div class="container">
+{#        부트스트랩에서는 가로를 12등분함#}
       <div class="col-md-3"></div>
       <div class="col-md-6">
         <nav>
           <div id="logo" style="">
           </div>
         </nav>
-        <form id = "loginPw">
+        <form id = "loginPw" action="/login" method="post">
           <div class="mb-3">
-            <input style="height:50px" type="email" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="아이디를 입력해 주세요.">
+            <input style="height:50px"name="user_id" type="text" class="form-control" id="userId" placeholder="아이디를 입력해 주세요.">
           </div>
           <div class="mb-3">
-            <input style="height:50px"  type="password" class="form-control" id="userPassword" placeholder="패스워드를 입력해 주세요.">
+            <input style="height:50px"name="password"  type="password" class="form-control" id="userPassword" placeholder="패스워드를 입력해 주세요.">
           </div>
           <div id="btnbox">
-            <button type="submit" class="btn btn-primary">로그인</button>
-            <button type="button" class="btn btn-primary" onclick="location.href='join.html' ">회원가입</button>
+            <button type="submit" class="btn btn-primary">로그인</button> <!--submit은 무조껀 post다-->
+            <button type="button" class="btn btn-primary" onclick="location.href='/join' ">회원가입</button>
           </div>
         </form>
       </div>

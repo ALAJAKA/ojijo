@@ -1,6 +1,8 @@
 venv/
 readme.md
 *.xml
+*.iml
+*.json
 
 node_modules/
 static/plugin/

@@ -4,7 +4,16 @@
     {{ super() }}
     <link rel="stylesheet" href="../static/css/board_main.css" />
     <noscript><link rel="stylesheet" href="../static/css/board_noscript.css" /></noscript>
-
+<style>
+    #before-post {
+        font-size: 20px;
+        display: none;
+    }
+    #next-post {
+        font-size: 20px;
+        display: none;
+    }
+</style>
 <script>
     $(document).ready(function () {
         show_content()
@@ -74,8 +83,9 @@
                 const after_div = document.querySelector("#next-post")
 
                 if (before[0] != null || before[0] != undefined) {
+                    before_div.style.display = "block";
                     before_div.addEventListener('click', () => { location.href=`/boards/${before[0]["id"]}` })
-                    before_div.querySelector("span").innerText = before[0]["bd_title"];
+                    before_div.querySelector("span").innerText = '< ' + before[0]["bd_title"] + ' >';
                 } else {
                     console.log('before 없으니 else 실행')
                     before_div.style.display = "none"
@@ -83,8 +93,9 @@
                 }
 
                 if (after[0] != null || after[0] != undefined) {
+                    after_div.style.display = "block";
                     after_div.addEventListener('click', () => { location.href=`/boards/${after[0]["id"]}` })
-                    after_div.querySelector("span").innerText = after[0]["bd_title"];
+                    after_div.querySelector("span").innerText = '< ' + after[0]["bd_title"] + ' >';
                 } else {
                     console.log('after 없으니 else 실행')
                     after_div.style.display = "none"
@@ -107,8 +118,8 @@
         if (check) {
             const board_id = "{{detailDict['detail']['id']}}"
             $.ajax({
-                type: "POST",
-                url: "/board/del",
+                type: "DELETE",
+                url: "/boards",
                 data: {board_id_give: board_id },
                 success: function (response) {
                     if (response["msg"] === 1) {

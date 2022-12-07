@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import os
+import shutil
 
 app = Flask(__name__)
 
@@ -9,17 +11,23 @@ import pymysql.cursors
 # 패스워드를 저장시 암호화 해쉬로!  참고B
 import bcrypt
 
+# timedelta 는 정해진 시간을 표현하기 위해 사용됩니다.
+from datetime import timedelta
+
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
                      user="root",
-                     db='각각',
-                     password='각각',
+                     db='sparta_test',
+                     password='1q2w3e4r',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
 # 해쉬화를 위해 필요
 app.secret_key = "#@!RFW12adnuiasfWE@!$2"
+
+# session 의 지속 시간을 정함. 해당 시간이 지나면 세션은 만료됨.
+app.permanent_session_lifetime = timedelta(hours=1)
 
 
 # 메인페이지
@@ -171,6 +179,26 @@ def other_detail():
     "after": post_detail_next
   }
   return jsonify({'msg': 'detail 이전, 이후 글 get!', "result": doc})
+
+
+# 상세 게시물 삭제
+@app.route("/boards", methods=["DELETE"])
+def delete_post():
+  board_id_receive = request.form["board_id_give"]
+  user_nk = session.get("user_nk")
+
+  sql = "delete from board where id = %s"
+  query_mysql(sql, board_id_receive)
+
+  sql = "delete from board_img where board_id = %s"
+  query_mysql(sql, board_id_receive)
+
+  folder_path = f'./static/posting_images/{user_nk}/board_{board_id_receive}'
+
+  if os.path.exists(folder_path):
+    shutil.rmtree(folder_path)
+
+  return jsonify({'msg': 1})
 
 
 # db 쿼리문

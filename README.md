@@ -96,9 +96,9 @@ alter table board add constraint foreign key(user_nk)references users(user_nk);
 
 
 - **회원 기능**
-    - [ ]  회원 가입, 로그인 구현
+    - [✅]  회원 가입, 로그인 구현
     - [ ]  마이 페이지 프로필 수정 구현
-    - [ ]  비밀번호 DB에 암호화 -보류
+    - [✅]  비밀번호 DB에 암호화 -보류
 
 - **DB**
     - [✅]  MySQL 정규화 작업

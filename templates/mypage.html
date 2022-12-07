@@ -1,43 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>로그인 페이지</title>
-  <link rel="stylesheet" href="../static/css/bootstrap.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-grid.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-reboot.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-utilities.css">
-  <link rel="stylesheet" href="../static/css/bootstrap-utilities.rtl.css">
-  <script src="../static/js/bootstrap.bundle.js"></script>
-  <script src="../static/js/bootstrap.esm.js"></script>
-  <script src="../static/js/bootstrap.js"></script>
-</head>
+{% extends "layout.html" %}
+{% block title %}메인페이지{% endblock %}
+{% block head %}
+    {{ super() }}
 <style>
-  #logo{margin-top:50px; margin-bottom: 30px; width:100%; height:40px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
 
 </style>
+{% endblock %}
 
-<body>
+{% block content %}
 <div id="wrap">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-10">
-        <div id="header">
-          <div class="row">
-            <div class="col-md-1">
-              <nav id="logo">
-              </nav>
-            </div>
-            <div class="col-md-9"></div>
-            <div class="col-md-2">로그인 기능 삽 우측 으로 플로팅</div>
-          </div>
-        </div>
         <section id="mainPage">
          <div class="container">
             <div class="row">
               <div class ="col-md-3">
-                <div style="width: 100%; height:200px; background: blue;"></div>
+                <div style="width: 100%; height:200px; "></div>
                 <button style="text-align: center; margin-left:31%; margin-top:10px;">이미지 업로드</button><br/>
                 <button style="text-align: center; margin-left:33%; margin-top:10px;">이미지 제거</button>
               </div>
@@ -81,5 +61,4 @@
     </div>
   </div>
 </div>
-</body>
-</html>
+{% endblock  %}

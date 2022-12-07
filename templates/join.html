@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../static/css/bootstrap-reboot.css">
   <link rel="stylesheet" href="../static/css/bootstrap-utilities.css">
   <link rel="stylesheet" href="../static/css/bootstrap-utilities.rtl.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="../static/js/bootstrap.bundle.js"></script>
   <script src="../static/js/bootstrap.esm.js"></script>
   <script src="../static/js/bootstrap.js"></script>
@@ -17,6 +18,36 @@
   #logo{margin-left: 30%; margin-top:50px;width:100%; height:150px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
   #btnbox{float: right}
 </style>
+<script>
+   $(document).ready(function (){
+    });
+    function userJoin() {
+        let user_id = $('#userId').val();
+        let password = $('#userPassword').val();
+        let password2 = $('#userPassword2').val();
+        let name = $('#name').val();
+        let email = $('#email').val();
+        let user_nk = $('#nk').val();
+        if(password !== password2){
+            return alert("비밀번호와 비밀번호 확인 입력값이 다릅니다.");
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/join',
+            data: { user_id: user_id,
+                password: password,
+                name: name,
+                email: email,
+                nk : user_nk
+                },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.href="/login"
+            }
+        });
+    }
+</script>
 
 <body>
 <div id="wrap">
@@ -41,13 +72,14 @@
           <input style="height:50px"  type="text" class="form-control" id="name" placeholder="이름을 입력해 주세요.">
         </div>
         <div class="mb-3">
-          <input style="height:50px"  type="text" class="form-control" id="address" placeholder="닉네임를 입력해 주세요.">
+          <input style="height:50px"  type="text" class="form-control" id="nk" placeholder="닉네임를 입력해 주세요.">
         </div>
         <div class="mb-3">
           <input style="height:50px"  type="text" class="form-control" id="email" placeholder="email주소를 입력해 주세요.">
         </div>
         <div id="btnbox">
-          <button type="button" class="btn btn-primary" onclick="location.href='login.html' ">회원가입</button>
+          <button type="button" class="btn btn-primary" onclick="location.href='/login'">취소</button>
+          <button type="button" class="btn btn-primary" onclick="userJoin()">회원가입</button>
         </div>
       </form>
     </div>

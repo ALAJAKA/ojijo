@@ -7,9 +7,9 @@ import pymysql
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
-                     db='newsfeed',
-                     password='alskdjfh',
+                     user="",
+                     db='',
+                     password='',
                      charset='utf8')
 curs = db.cursor(pymysql.cursors.DictCursor)
 

@@ -7,7 +7,7 @@
     /* 게시물(.card)   */
     .card {
         display: inline-block;
-        margin: 50px;
+        margin: 25px;
         box-sizing: border-box;
         height: 450px;
 
@@ -22,9 +22,11 @@
         object-fit: cover;
     }
 
+    /*
     .card:nth-child(4n+2) {
         margin-left: 200px;
     }
+    */
 
     .top-menu > a {
         color: black;
@@ -51,7 +53,7 @@
 
     /*닉네임칸*/
     .nick {
-        font-size: 10px;
+        font-size: 12px;
     }
 
     /* 쉐도우 */
@@ -119,8 +121,12 @@
 {% block content %}{# 내꺼 내용 시작 #}
 
 <!-- 게시물 -->
-<div id="board_new">
-
+<div class="container-fluid" >
+    <div class="row">
+        <div class ="col-md-1"></div>
+        <div class ="col-md-10" id="board_new"></div>
+        <div class ="col-md-1"></div>
+    </div>
 </div>
 
 {% endblock %}{# 내꺼 내용 끝 layout 110~112에 내꺼 삽입됨 #}

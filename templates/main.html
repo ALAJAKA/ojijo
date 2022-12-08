@@ -67,11 +67,14 @@
         show_table(1);
     });
     var page = 2;
+    var k = '';
     $(window).scroll(function() {
     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
         show_table(page);
-        alert('page가 변경됩니다.')
-      page++;
+        if(k!=undefined){
+            alert('page가 변경됩니다.')
+            page++;
+        }
     }
     });
 //  로그인하면 보여줌 (GET)
@@ -81,6 +84,7 @@
             url: '/getMain',
             data: {num:num},
             success: function (response) {
+                k = response[0];
                 for(let i=0; i< response.length; i++ ){
                     let title = response[i]["bd_title"]
                     let content = response[i]["bd_content"]

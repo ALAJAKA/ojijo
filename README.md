@@ -106,7 +106,7 @@ alter table board add constraint foreign key(user_nk)references users(user_nk);
 
 - **CRUD**
     - [ ]  게시글 쓰기 기능 구현
-    - [ ]  게시글 글 보여주기 구현
+    - [✅]  게시글 글 보여주기 구현
     - [ ]  게시글 글 수정 구현
     - [ ]  게시글 글 삭제 구현
 

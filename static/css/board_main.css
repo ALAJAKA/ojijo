@@ -3862,3 +3862,40 @@ input, select, textarea {
 }
 
 
+
+#blog-wrap, #email-wrap, #user-fp-wrap {
+	min-height:30px;
+	width: 600px;
+	margin: auto;
+}
+#blog-wrap {
+	margin-top: 30px;
+}
+#user-fp-wrap {
+	margin-top: 20px;
+}
+
+
+#blog{
+	width: 600px;
+	min-height:30px;
+	margin: auto;
+	display: none;
+}
+#blog a {
+	font-size: 17px;
+}
+#email{
+	width: 600px;
+	min-height:30px;
+	margin: auto;
+	font-size: 17px;
+}
+#user-fp{
+	width: 600px;
+	min-height:30px;
+	margin: auto;
+	font-size: 15px;
+	display: none;
+}
+

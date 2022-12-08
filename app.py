@@ -145,6 +145,17 @@ def mypage():
 def personal():
   return render_template('personal.html')
 
+@app.route("/personal", methods=["GET"])
+def get_personal():
+    sql = "select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate\
+            from users\
+            left join board on users.user_nk = board.user_nk\
+            where users.user_nk = '람쥐'\
+            order by board.bd_writeDate desc;"
+    cur.execute(sql)
+    data = cur.fetchall()
+    print(data)
+    return jsonify({'result': data})
 
 @app.route("/write", methods=["GET", "POST"])
 def write():

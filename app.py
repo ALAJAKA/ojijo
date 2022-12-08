@@ -44,7 +44,7 @@ def home():  # 함수명은 중복이 불가
 def getMain():
   # 1. 보드테이블 모든 게시물 정보를 가져온다
   cur = db.cursor(pymysql.cursors.DictCursor)  # 장바구니
-  sql = "SELECT * FROM board"
+  sql = "SELECT * FROM board ORDER BY id desc"
   cur.execute(sql)
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.

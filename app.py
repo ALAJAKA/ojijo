@@ -17,9 +17,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
+                     user="",
                      db='ojijo',
-                     password='wrik3856!!',
+                     password='',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -149,6 +149,44 @@ def personal():
 @app.route("/write", methods=["GET", "POST"])
 def write():
   return render_template('post_write.html')
+
+
+# 게시글 저장
+@app.route('/post_save', methods=["POST"])
+def post_save():
+    bd_title = request.form['bd_title_give']
+    bd_content = request.form['bd_content_give']
+    user_nk = session.get("user_nk")
+
+    sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
+
+    cur.execute(sql)
+    cur.fetchall()
+    db.commit()
+    cur.close()
+
+    return redirect(url_for("home"))
+
+
+# 게시글 가져오기
+
+
+
+# 게시글 업데이트
+# @app.route('/post_up', methods=["POST"])
+# def post_up():
+#     bd_title = request.form['bd_title_give']
+#     bd_content = request.form['bd_content_give']
+#     user_nk = session.get("user_nk")
+#
+#     sql = """insert into board (bd_title, bd_content, user_nk) Values ('%s', '%s');""" %(bd_title, bd_content, user_nk)
+#
+#     cur.execute(sql)
+#     cur.fetchall()
+#     db.commit()
+#     cur.close()
+#
+#     return redirect(url_for("home"))
 
 
 # 상세 게시물 페이지

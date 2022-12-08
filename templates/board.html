@@ -4,6 +4,10 @@
     {{ super() }}
     <link rel="stylesheet" href="../static/css/board_main.css" />
     <noscript><link rel="stylesheet" href="../static/css/board_noscript.css" /></noscript>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500&display=swap" rel="stylesheet">
+
 <style>
     #before-post {
         font-size: 20px;
@@ -16,7 +20,7 @@
     .delete-board {
         width: max-content;
         margin: auto;
-        margin-top: 50px;
+        margin-top: 20px;
         display: none;
     }
 </style>
@@ -34,18 +38,19 @@
 
         // 블로그 주소가 등록 되어 있냐 없냐.
         const user_site = `{{detailDict['detail']['user_site']}}`
-        if (user_site === "None") {
-            $("#blog-url").attr("style", "display:none;")
-        } else {
+        if (user_site != "None") {
+            $('#blog').attr("style", "display:block;")
             if (user_site.includes("http://") === false) {
-                $("#blog-url").attr("href", "http://" + user_site)
+                $("#blog-link").attr("href", "http://" + user_site)
             }
         }
 
         // 소개글이 있냐 없냐
         const user_fp = `{{detailDict['detail']['user_fp']}}`
-        if (user_fp === "None") {
-            $("#user-fp").attr("style", "display:none;")
+        if (user_fp != "None") {
+            $("#user-fp").attr("style", "display:block;")
+        } else {
+
         }
 
         const before_imgObj = `{{detailDict['images']}}`    // [{}, {}]
@@ -120,6 +125,8 @@
         if (user_nk_board === user_nk_session) {
             console.log("글쓴이 당사자!!!")
             $(".delete-board").attr("style", "display:block")
+            const liner = document.querySelector("#liner")
+            liner.style.borderTop = "1px solid gray";
         }
     }
 
@@ -129,6 +136,7 @@
 
         if (check) {
             const board_id = "{{detailDict['detail']['id']}}"
+            console.log("삭제를 위해 : " + board_id)
             $.ajax({
                 type: "DELETE",
                 url: "/boards",
@@ -163,23 +171,23 @@
 </script>
 {% endblock %}
 {% block content %}
-<div class="is-preload">
+<div class="is-preload" >
 <!-- Wrapper -->
     <div id="wrapper" style="margin-bottom: 100px;">
 
         <!-- Header -->
         <header id="header" class="alt">
             <div class="logo"><img src="../static/board_images/basic_img/default_profile.png" alt="" /></div>
-            <h1 id="nick-name" style="font-size: 50px; font-weight: bold">{{detailDict["detail"]["user_nk"]}}</h1>
-            <p id="blog-and-email"><a id="blog-url">{{detailDict["detail"]["user_site"]}}</a><br />
-            email : <span>{{detailDict["detail"]["user_email"]}}</span></p>
-            <span id="user-fp">{{detailDict["detail"]["user_fp"]}}</span>
+            <h1 id="nick-name" style="font-size: 50px; font-weight:bold;">{{detailDict["detail"]["user_nk"]}}</h1>
+            <div id="blog-wrap"><div id="blog"><a id="blog-link">{{detailDict['detail']['user_site']}}</a></div></div>
+            <div id="email-wrap"><div id="email">{{detailDict["detail"]["user_email"]}}</div></div>
+            <div id="user-fp-wrap"><div id="user-fp">{{detailDict["detail"]["user_fp"]}}</div></div>
         </header>
 
         <!-- Main -->
-        <div id="main">
+        <div id="main" style="padding-top: 150px;">
             <!-- Content -->
-            <section id="content" class="main" style="min-height: 800px; margin-bottom: 150px;">
+            <section id="content" class="main" style="min-height: 700px; margin-bottom: 100px; background-color: lightcyan">
                 <p id="main-title">{{detailDict["detail"]["bd_title"]}}</p>
                 <p id="writer">{{detailDict["detail"]["user_nk"]}}</p>
                 <p id="post-content" style="color: black;"></p>
@@ -188,45 +196,25 @@
             <!-- 이전 글, 다음 글 -->
             <section id="before-after-wrap">
                 <div id="before-after">
-                    <div id="before-post"><span>제목 </span> ⇦ 이전글</div>
-                    <div id="next-post">다음글 ⇨ <span> 제목</span></div>
+                    <div id="before-post" style="font-family: 'IBM Plex Sans KR', sans-serif; font-size: 30px;"><span style="font-size: 30px;"></span> ⇦</div>
+                    <div id="next-post" style="font-family: 'IBM Plex Sans KR', sans-serif; font-size: 30px;">⇨ <span style="font-size: 30px;"></span></div>
                 </div>
             </section>
 
-            <!-- 댓글 -->
-            <section class="main">
-                <form method="post" action="#">
-                    <div class="row gtr-uniform">
-                        <div class="col-12">
-                            <textarea name="demo-message" id="demo-message" id="submit-comment"
-                                      placeholder="Enter your message" rows="6" style="height:150px;"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <button type="button" class="btn btn-secondary">댓글 달기</button>
-                        </div>
-                    </div>
-                </form>
-            </section>
-
-            <!-- 댓글 목록 -->
-            <section class="main" id="comments-wrap">
-                <div class="comment-box">
-                    <div class="comment-box-profile">
-                        <img src="">
-                        <div>dd</div>
-                    </div>
-                    <div class="comment-box-content">코멘트 내용</div>
-                    <div class="comment-box-replyBtn">답글 달기</div>
+            <!-- 삭제, 수정 버튼 -->
+            <section class="main" id="liner" style="border-top: 0px">
+                <div class="delete-board">
+                    <button type="button" class="btn btn-success" style="background-color: dodgerblue;
+                        border:0px;" onclick="update_board()"><span style="color: white">게시글 수정 하기</span></button>
+                    <button type="button" class="btn btn-danger" style="background-color: #dc3545;
+                        border:0px;" onclick="delete_board()"><span style="color: white">게시글 삭제 하기</span></button>
                 </div>
             </section>
 
+        </div>
+
     </div>
 
-    <!-- 삭제, 수정 버튼 -->
-    <div class="delete-board">
-        <button type="button" class="btn btn-success" onclick="update_board()">게시글 수정 하기</button>
-        <button type="button" class="btn btn-danger" onclick="delete_board()">게시글 삭제 하기</button>
-    </div>
 
     <!--  간격 띄우기 용 -->
     <div style="width: 100%; height:100px;"></div>

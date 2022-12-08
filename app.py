@@ -336,13 +336,6 @@ def delete_post():
   return jsonify({'msg': 1})
 
 
-# 상세 게시물 수정 하기 버튼 클릭 시
-@app.route("/write", methods=["PUT"])
-def updating_write():
-  print("gkgkgkgkgkgk")
-  board_id_receive = request.json.get("board_id")
-  print("수정 잘 되고 있나? ", board_id_receive)
-  return jsonify({'msg': 1})
 
 
 if __name__ == '__main__':

@@ -29,7 +29,7 @@
         show_content()
         get_next_and_before_post();
         check_writer();
-    });
+    })
 
     const show_content = () => {
         const before_content = `{{detailDict['detail']['bd_content']}}`
@@ -49,8 +49,6 @@
         const user_fp = `{{detailDict['detail']['user_fp']}}`
         if (user_fp != "None") {
             $("#user-fp").attr("style", "display:block;")
-        } else {
-
         }
 
         const before_imgObj = `{{detailDict['images']}}`    // [{}, {}]
@@ -62,7 +60,6 @@
             for (let i = 0; i < after_imgObj.length; i++) {
                 const img_obj = after_imgObj[i]
                 const path = `../static/posting_images/${img_obj["user_nk"]}/board_${img_obj["board_id"]}/${img_obj["image"]}`
-                console.log('path : ' + path)
                 all_img[`${i}`].src = path;
                 all_img[`${i}`].style.maxWidth = "100%";
             }
@@ -81,14 +78,8 @@
             url: "/boards/pages",
             data: { user_nk_give: now_user_nk, post_id_give: now_post_id },
             success: function (response) {
-                console.log(response["msg"])
-                console.log(response["result"]) // {"after": [{]], "before": [{}]}  [] = [{"id": 10}]
-
                 const before = response["result"]["before"]
                 const after = response["result"]["after"]
-
-                console.log(`비교하자!  before : ${before[0]}, after : ${after}`)
-
                 const before_after_div = document.querySelector("#before-after")
                 const before_div = document.querySelector("#before-post")
                 const after_div = document.querySelector("#next-post")
@@ -98,7 +89,6 @@
                     before_div.addEventListener('click', () => { location.href=`/boards/${before[0]["id"]}` })
                     before_div.querySelector("span").innerText = '< ' + before[0]["bd_title"] + ' >';
                 } else {
-                    console.log('before 없으니 else 실행')
                     before_div.style.display = "none"
                     before_after_div.style.gridTemplateColumns = "40%"
                 }
@@ -108,7 +98,6 @@
                     after_div.addEventListener('click', () => { location.href=`/boards/${after[0]["id"]}` })
                     after_div.querySelector("span").innerText = '< ' + after[0]["bd_title"] + ' >';
                 } else {
-                    console.log('after 없으니 else 실행')
                     after_div.style.display = "none"
                     before_after_div.style.gridTemplateColumns = "40%"
                 }
@@ -123,7 +112,6 @@
         const user_nk_session = "{{session['user_nk']}}"
         const user_nk_board = "{{detailDict['detail']['user_nk']}}"
         if (user_nk_board === user_nk_session) {
-            console.log("글쓴이 당사자!!!")
             $(".delete-board").attr("style", "display:block")
             const liner = document.querySelector("#liner")
             liner.style.borderTop = "1px solid gray";
@@ -136,7 +124,6 @@
 
         if (check) {
             const board_id = "{{detailDict['detail']['id']}}"
-            console.log("삭제를 위해 : " + board_id)
             $.ajax({
                 type: "DELETE",
                 url: "/boards",
@@ -167,6 +154,9 @@
             }
         }
     }
+
+    // 어떤 경로로던 뒤로 가기 버튼을 클릭해서 board 페이지에 다시 진입했다면, 새로고침을 해주겠다.
+
 
 </script>
 {% endblock %}

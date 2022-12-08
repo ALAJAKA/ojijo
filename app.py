@@ -3,6 +3,7 @@ import os
 import shutil
 import boto3
 from botocore.exceptions import ClientError
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -19,9 +20,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
+                     user="lee",
                      db='ojijo',
-                     password='alskdjfh',
+                     password='spartatest중',
                      charset='utf8')
 
 cur = db.cursor(pymysql.cursors.DictCursor)
@@ -38,7 +39,12 @@ app.permanent_session_lifetime = timedelta(hours=1)
 def home():  # 함수명은 중복이 불가
 
   return render_template('main.html')
-
+@app.route('/mypage/uploader', methods=['GET','POST'])
+def uploader_file():
+  if request.method == 'POST':
+    f = request.files['file']
+    fname = secure_filename(f.filename)
+    print(fname)
 @app.route("/getMain", methods=["GET"])
 def getMain():
   # 1. 보드테이블 모든 게시물 정보를 가져온다

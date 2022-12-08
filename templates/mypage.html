@@ -79,13 +79,13 @@
                 <div style="width: 100%; height:200px; ">
 {#                    <img src="https://leejk-folder.s3.ap-northeast-2.amazonaws.com/aa.png">#}
                 </div>
-                  <from action="/uploader" method="POST" enctype="multipart/form-data">
-                      <input type="file" id="imgup" name="file" >
+                  <form action="/mypage/uploader" method="POST" enctype="multipart/form-data">
+                      <input type="file" id="imgup" name="file" style="display: none">
                       <label for="imgup" style="text-align: center; margin-left:31%; margin-top:10px;padding:5px;border-radius: 5px; border: 1px solid black">이미지 선택</label>
-                      <input type="submit" id="upd" />
+                      <input type="submit" id="upd"style="display: none"/>
                       <label for="upd" style="text-align: center; margin-left:31%; margin-top:10px;padding:5px;border-radius: 5px; border: 1px solid black">이미지 넣기</label>
 
-                  </from>
+                  </form>
               </div>
               <div class ="col-md-6" style="padding-left:20px; border-left:1px solid black;">
                 <h2>{{ session['user_nk'] }}</h2>

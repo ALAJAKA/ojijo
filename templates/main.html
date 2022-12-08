@@ -61,7 +61,37 @@
 
 </style>
 <script>
+    $(document).ready(function () {
+        show_table();
+    });
 //  로그인하면 보여줌 (GET)
+    function show_table(){
+         $.ajax({
+            type: 'GET',
+            url: '/getMain',
+            data: { },
+            success: function (response) {
+                for(let i=0; i< response.length; i++ ){
+                    let title = response[i]["bd_title"]
+                    let content = response[i]["bd_content"]
+                    let todate = response[i]["bd_writeDate"]
+                    let date_change = new Date (todate).toISOString().split('T')[0]
+                    let nk = response[i]["user_nk"]
+                    let temp_html = `<div class="card" style="width: 18rem;" onclick="location.href='/boards/20' ">
+                                        <img src="../static/picture/01.jpg" class="card-img-top" alt="이미지">
+                                        <div class="card-body">
+                                            <h3 class="card-title">${title}</h3>
+                                            <p class="card-text">${content}</p>
+                                            <span>${date_change}</span>
+                                            <hr style="margin: 0">
+                                            <p class="nick">닉네임: ${nk}</p>
+                                        </div>
+                                    </div>`
+                    $('#board_new').append(temp_html);
+                }
+            }
+        });
+    }
 
     <!-- 흑백반전 -->
     var toggle = 0;
@@ -89,76 +119,8 @@
 {% block content %}{# 내꺼 내용 시작 #}
 
 <!-- 게시물 -->
-<div class="card" style="width: 18rem;" onclick="location.href='/boards/20' ">
-    <img src="../static/picture/01.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목은 길어야 제맛이지</h3>
-        <p class="card-text">내용은84?</p>
-        <hr>
-        <p class="nick">닉네임: 표정훈</p>
-    </div>
+<div id="board_new">
+
 </div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/02.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">재수강할께요교수님</h3>
-        <p class="card-text">012345678901234567890123456789012345678901234567890123456789012345678901234567890123</p>
-        <hr>
-        <p class="nick">닉네임: 김민수B 교수님</p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/03.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목은 9글자</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임: 이재관 부교수님</p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/04.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임: 박종수 고수님 </p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/05.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임: 정성욱 갓제네럴팀장님</p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/06.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임</p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/07.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임</p>
-    </div>
-</div>
-<div class="card" style="width: 18rem;">
-    <img src="../static/picture/08.jpg" class="card-img-top" alt="이미지">
-    <div class="card-body">
-        <h3 class="card-title">제목</h3>
-        <p class="card-text">내용을 가득채워보면 어떻게 될까? 프로젝트 너무 어려워ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ</p>
-        <hr>
-        <p class="nick">닉네임</p>
-    </div>
-</div>
+
 {% endblock %}{# 내꺼 내용 끝 layout 110~112에 내꺼 삽입됨 #}

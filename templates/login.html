@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Jua&family=Noto+Serif+KR:wght@200&display=Gowun+Dodum&display=swap"
-          rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f1e32eaf40.js" crossorigin="anonymous"></script>
 </head>
 <style>
-  #loginPw{margin-left: 30%; margin-top:100px; width:100%;}
-  #logo{margin-left: 30%; margin-top:50px;width:100%; height:150px; background-repeat: no-repeat; background-size: cover; background-image: url("https://dnvefa72aowie.cloudfront.net/karrot-cs/etc/202007/0cf1d10235c37b2635c02719125da37cc1bd632518198b1e1da7f5a364156540.png")}
+  #loginPw{margin-left: 30%; margin-top:0px; width:100%;}
+  #logo{margin-left: 30%; margin-top:80px;width:100%; height:100px; }
   #btnbox{float: right}
 </style>
 <script>
@@ -29,7 +30,10 @@
       <div class="col-md-3"></div>
       <div class="col-md-6">
         <nav>
-          <div id="logo" style="">
+          <div id="logo">
+               <div class="container" style="text-align: center; font-size:40px;">
+            <i class="fa-solid fa-user-secret"></i> 5JIJO <i class="fa-solid fa-user-secret"></i>
+            </div>
           </div>
         </nav>
         <form id = "loginPw" action="/login" method="post">

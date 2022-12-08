@@ -18,9 +18,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
-                     db='sparta_test',
-                     password='1q2w3e4r',
+                     user="",
+                     db='ojijo',
+                     password='',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -140,8 +140,22 @@ def join():
 
 @app.route("/mypage", methods=["GET", "POST"])
 def mypage():
-  return render_template('mypage.html')
-
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
+  curs.execute(sql, (session.get('user_nk')))
+  param = curs.fetchone()
+  curs.close()
+  return render_template('mypage.html' , param =param)
+@app.route("/mypage/fp", methods=["GET", "POST"])
+def mypagefp():
+  user_fp = request.form['user_fp']
+  user_nk = session.get('user_nk')
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql ="update users set user_fp = %s where user_nk = %s"
+  curs.execute(sql,(user_fp,user_nk))
+  db.commit();
+  curs.close()
+  return jsonify({"msg":"프로필이 변경 되었습니다."})
 
 @app.route("/personal", methods=["GET", "POST"])
 def personal():

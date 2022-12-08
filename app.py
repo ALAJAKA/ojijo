@@ -193,13 +193,21 @@ def post_save():
 @app.route("/boards/<board_id>", methods=["GET"])
 def board(board_id):
   board_id_receive = int(board_id)
+
+  curs = db.cursor(pymysql.cursors.DictCursor)
+
   sql = """SELECT b.id, b.bd_title, b.bd_content, b.user_nk, u.user_email
     , u.user_site, u.user_img, u.user_fp FROM board AS b 
     INNER JOIN users AS u ON b.user_nk = u.user_nk WHERE b.id = %s;"""
-  post_detail_result = query_mysql(sql, board_id_receive, 1)
+  curs.execute(sql, board_id_receive)
+  post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
+
   # 해당 포스트에서 사용된 이미지
   sql = "select * from board_img where board_id = %s"
-  img_result = query_mysql(sql, board_id_receive, 1)
+  curs.execute(sql, board_id_receive)
+  img_result = curs.fetchall()
+
+  curs.close()  # -> 커서를 닫아준다
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
@@ -215,15 +223,20 @@ def other_detail():
   user_nk_receive = request.form["user_nk_give"]
   post_id_receive = int(request.form["post_id_give"])
 
+  curs = db.cursor(pymysql.cursors.DictCursor)
   # 이전 글의 post_id 가져오기
   sql = """SELECT id, bd_title FROM board b WHERE user_nk = %s AND id = (SELECT max(id) FROM board b2 
     WHERE user_nk = %s AND id < %s);"""
-  post_detail_before = query_mysql(sql, (user_nk_receive, user_nk_receive, post_id_receive), 1)
+  curs.execute(sql, (user_nk_receive, user_nk_receive, post_id_receive))
+  post_detail_before = curs.fetchall()
 
   # 이후 글의 post_id 가져오기
   sql = """SELECT id, bd_title FROM board b WHERE user_nk = %s AND id = (SELECT min(id) FROM board b2 
     WHERE user_nk = %s AND id > %s);"""
-  post_detail_next = query_mysql(sql, (user_nk_receive, user_nk_receive, post_id_receive), 1)
+  curs.execute(sql, (user_nk_receive, user_nk_receive, post_id_receive))
+  post_detail_next = curs.fetchall()
+
+  curs.close()
 
   ##### 값이 없을 경우 () 이렇게 튜플로 나와.
   doc = {
@@ -239,11 +252,17 @@ def delete_post():
   board_id_receive = request.form["board_id_give"]
   user_nk = session.get("user_nk")
 
+  curs = db.cursor(pymysql.cursors.DictCursor)
+
   sql = "delete from board where id = %s"
-  query_mysql(sql, board_id_receive)
+  curs.execute(sql, board_id_receive)
+  db.commit()
 
   sql = "delete from board_img where board_id = %s"
-  query_mysql(sql, board_id_receive)
+  curs.execute(sql, board_id_receive)
+  db.commit()
+
+  curs.close()
 
   folder_path = f'./static/posting_images/{user_nk}/board_{board_id_receive}'
 
@@ -253,40 +272,14 @@ def delete_post():
   return jsonify({'msg': 1})
 
 
-# db 쿼리문
-def query_mysql(sql, value=0, select_use_value=0, check_last_id=0):
-  db = pymysql.connect(host="localhost", port=3306, user="root", db='sparta_test', password='1q2w3e4r',
-                       charset='utf8')
-  cur = db.cursor(pymysql.cursors.DictCursor)
+# 상세 게시물 수정 하기 버튼 클릭 시
+@app.route("/write", methods=["PUT"])
+def updating_write():
+  print("gkgkgkgkgkgk")
+  board_id_receive = request.json.get("board_id")
+  print("수정 잘 되고 있나? ", board_id_receive)
+  return jsonify({'msg': 1})
 
-  if value == 0 and check_last_id == 0:  # value 가 초기값 그대로 0이라면, 이는 select 문.
-    cur.execute(sql)
-    select_result = cur.fetchall()
-    db.close()
-    return select_result
-  else:
-    if select_use_value == 1:  # select 인데, 검색어를 value 로 주는 select.
-      cur.execute(sql, value)
-      select_result = cur.fetchall()
-      db.close()
-      return select_result
-    elif check_last_id == 1:  # insert 를 실행했을 때 생성된 레코드의 id 값을 같이 반환받고 싶다면.
-      cur.execute(sql, value)  # value 가 하나라면 ()는 필요없고, 다수라면 밖에서 매개변수를 넣어줄 때 () 로 넣어줘야 해.
-      db.commit()
-      db.close()
-      return cur.lastrowid
-    else:  # 그냥 insert, update, delete 를 적용만 시키고 끝내고 싶다.
-      cur.execute(sql, value)
-      db.commit()
-      db.close()
-
-
-# 세션이 있는지 없는지를 체크하는 함수
-def check_session():
-  if session.get("user_id") is not None and session.get("user_nk") is not None:
-    return True
-  else:
-    return False
 
 
 if __name__ == '__main__':

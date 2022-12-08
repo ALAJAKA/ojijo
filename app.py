@@ -18,7 +18,7 @@ import bcrypt
 from datetime import timedelta
 
 # 디비 연결하기
-db = pymysql.connect(host="localhost",
+db = pymysql.connect(host="",
                      port=3306,
                      user="",
                      db='ojijo',
@@ -212,7 +212,7 @@ def get_personal():
     user_nk = session.get("user_nk")
     print(user_nk)
     cur = db.cursor(pymysql.cursors.DictCursor)
-    sql = """select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate
+    sql = """select users.user_nk,user_img,user_fp,user_email,board.id,bd_title,bd_content,bd_writeDate
             from users
             left join board on users.user_nk = board.user_nk
             where users.user_nk = %s

@@ -1,20 +1,42 @@
 $(document).ready(function () {
     listing();
+    console.log('스크립트실행')
 });
 
 function listing() {
-    $('#content').empty()
     $.ajax({
         type: 'GET',
-        url: '/personal',
+        url: '/personal/site',
         data: {},
         success: function (response) {
             let rows = response['result']
+            let user_nk = rows[0]['user_nk']
+            let user_img = rows[0]['user_img']
+            let user_fp = rows[0]['user_fp']
+            let user_email = rows[0]['user_email']
+
+            // profile append
+            let temp_html = `<div class="profile">
+                                <a href="https://velog.io/@squirrelswj"><img src="../static/personal_img/night.png"></a>
+                                <div class="profile_text">
+                                    <a href="https://velog.io/@squirrelswj"><div class="name">${user_nk}</div></a>
+                                    <div class="discription">${user_fp}</div>
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="icon">
+                                <a href="https://github.com/squirrelswj" target="_black" style="margin-left:0px"><img src="../static/personal_img/git_icon.svg"></a>
+                                <a href="https://velog.io" target="_black"><img src="../static/personal_img/house.png"></a>
+                                <a href="${user_email}" target="_black"><img src="../static/personal_img/email.png"></a>
+                            </div>`
+            $('#profile').append(temp_html)
+
+            //contents append
             for (let i = 0; i < rows.length; i++) {
                 let bd_title = rows[i]['bd_title']
                 let bd_content = rows[i]['bd_content']
                 let bd_writeDate = rows[i]['bd_writeDate']
-                let temp_html = `<div class="contents">
+                let temp_html2 = `<div class="contents">
                                     <a href="board.html">
                                     <div class="content_img"><img src="../static/personal_img/nap.png" alt="post-thumbnail" ></div>
                                     </a>
@@ -22,86 +44,11 @@ function listing() {
                                     <p>${bd_content}</p>
                                     <div class="subinfo">${bd_writeDate} · 0개의 댓글 · ♥0</div>
                                  </div>`
-                $('#content').append(temp_html)
+
+                $('#contents').append(temp_html2)
 
             }
         }
     })
 
 }
-
-//
-// function listing() {    //서버로부터 데이터 GET
-//     $('#cards-box').empty()
-//     $.ajax({
-//         type: 'GET',
-//         url: '/',
-//         data: {},
-//         success: function (response) {
-//             let rows = response['teams']
-//             for (let i = 0; i < rows.length; i++) {
-//                 let name = rows[i]['name']     //이름 변수
-//                 let star = rows[i]['star']
-//                 let comment = rows[i]['comment']//코멘트 변수
-//                 let num = rows[i]['num']        //선택한 데이터 삭제하기 위한 번호 기록 변수
-//                 let randomNum = rows[i]['randomNum']//이미지 랜덤출력을위한 1~8 사이 숫자를 가진 변수
-//
-//                 let star_image = '⭐'.repeat(star) //평점 변수
-//
-//                 let temp_html = `<div class="col">
-//                                             <div class="card h-100" style="margin-bottom :25px">
-//                                                 <img src="http://squirrelswj.shop/static/` + randomNum + `.png" class="card-img-top" alt="">
-//                                                 <div class="card-body">
-//                                                     <h5 class="card-title">${name}</h5><p class="card-star">${star_image}</p>
-//                                                     <p class="card-text"><hr></p>
-//                                                     <p class="mycomment">${comment}</p>
-//                                                     <div class="delete-btn">
-//                                                         <button onclick="data_delete(${num})" type="button" class="btn btn-outline-secondary">삭제</button>
-//                                                     </div>
-//                                                 </div>
-//                                             </div>
-//                                         </div>`
-//                 $('#cards-box').append(temp_html)
-//             }
-//         }
-//     })
-// }
-//
-// function posting() {    //방명록 기록하기 버튼 클릭 시 POST
-//     let name = $('#name').val()
-//     let star = $('#star').val()
-//     let comment = $('#comment').val()
-//
-//     let randomNum = Math.floor((Math.random() * 10));     //랜덤이미지를 위한 1~8까지 랜덤숫자
-//     randomNum = parseInt(randomNum % 8) + 1;
-//
-//     $.ajax({
-//         type: 'POST',
-//         url: '/sung',
-//         data: {'name_give': name, 'star_give': star, 'comment_give': comment, 'randomNum_give': randomNum},
-//         success: function (response) {
-//             alert(response['msg'])
-//             window.location.reload()
-//         }
-//     });
-// }
-//
-// function data_delete(num) {    //방명록 삭제 버튼 클릭시 num_give POST
-//     $.ajax({
-//         type: 'POST',
-//         url: '/sung/delete',
-//         data: {'num_give': num},
-//         success: function (response) {
-//             alert(response['msg'])
-//             window.location.reload()
-//         }
-//     });
-// }
-//
-// function open_box() {   //방명록 기록하기 hidden해제
-//     $('#post-box').show()
-// }
-//
-// function close_box() {  //방명록 기록하기 hidden
-//     $('#post-box').hide()
-// }

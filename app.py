@@ -19,12 +19,13 @@ import bcrypt
 from datetime import timedelta
 
 # 디비 연결하기
-db = pymysql.connect(host="",
+db = pymysql.connect(host="localhost",
                      port=3306,
                      user="",
                      db='ojijo',
                      password='',
                      charset='utf8')
+
 cur = db.cursor(pymysql.cursors.DictCursor)
 
 # 해쉬화를 위해 필요
@@ -146,6 +147,8 @@ def mypage():
   sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
   curs.execute(sql, (session.get('user_nk')))
   param = curs.fetchone()
+  if param['user_fp'] == None:
+    param['user_fp'] = ''
   if param['user_site'] == None:
     param['user_site'] = session.get('user_nk') +'.5JIJO'
   curs.close()

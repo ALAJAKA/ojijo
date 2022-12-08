@@ -120,4 +120,6 @@ alter table board add constraint foreign key(user_nk)references users(user_nk);
 - **GIT** 2022-12-06 설정 완료
     - [✅]  git add / commit / push 활용
     - [✅]  git pull / merge 활용
+    
+    페이지네이션 - 무한스크롤 구현함
 

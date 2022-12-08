@@ -41,66 +41,63 @@
             }
         }
 
-
         function bdScroll(obj) {
             obj.style.height = '2px';
             obj.style.height = (12 + obj.scrollHeight) + 'px';
             obj.style.maxHeight = '1050px';
         }
 
-        function post_save() {
-            let bd_title = $("#bd_title").val();
-            let bd_content = $("#bd_content").val();
-            if (bd_title == "") {
-                return alert('제목을 입력해 주세요.')
+        function post_save_or_update() {
+            alert("ㄴㅇㄹ")
+            const receive_var = `{{status}}`
+            if (receive_var === "0") {
+                let bd_title = $("#bd_title").val();
+                let bd_content = $("#bd_content").val();
+                if (bd_title == "") {
+                    return alert('제목을 입력해 주세요.')
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/post_save",
+                    data: {
+                        'bd_title_give': bd_title,
+                        'bd_content_give': bd_content
+                    },
+                    success: function (response) {
+                        location.href = `/boards/${response["result"]}`
+                    }
+                });
+            } else if (receive_var === "1") {
+                let bd_title = $("#bd_title").val();
+                let bd_content = $("#bd_content").val();
+
+                const board = '{{board}}'
+                const board_change = board.replace(/&#39;/g, `"`)
+                const board_parse = JSON.parse(board_change)
+                const bd_id = board_parse["id"]
+
+                if (bd_title == "") {
+                    return alert('제목을 입력해 주세요.')
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/post_up",
+                    data: {
+                        'bd_title_give': bd_title,
+                        'bd_content_give': bd_content,
+                        'bd_id_give': bd_id
+                    },
+                    success: function (response) {
+                        location.href = `/boards/${response["result"]}`
+                    }
+                });
             }
-
-            $.ajax({
-                type: "POST",
-                url: "/post_save",
-                data: {'bd_title_give': bd_title,
-                    'bd_content_give': bd_content
-                },
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
-                }
-            });
         }
-
-        function post_get() {
-            $.ajax({
-                type: "GET",
-                url: "/post_get",
-                data: {},
-                success: function (response) {
-                    let
-                }
-            })
-        }
-
-        // function post_up() {
-        //     let bd_title = $("#bd_title").val();
-        //     let bd_content = $("#bd_content").val();
-        //
-        //     if (bd_title == "") {
-        //         return alert('제목을 입력해주세요.')
-        //     }
-        //
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/post_up",
-        //         data: {'bd_title_give': bd_title,
-        //         'bd_content_give' : bd_content},
-        //         success: function (response) {
-        //             alert(response['msg'])
-        //             window.location.reload()
-        //         }
-        //     });
-        // }
-
 
     </script>
+
 </head>
 
 <body>
@@ -113,12 +110,8 @@
                        placeholder="당신의 이야기를 적어보세요 .." maxlength="8000"></textarea>
         </div>
         <div class="WriteBtn">
-
-<!--            <button class="WB1" onclick="history.back()">←나가기</button>-->
-<!--            <button class="WB2" onclick="bd_up()">수정하기</button>-->
-
             <button class="WB1" onclick="history.back()">←나가기</button>
-            <button class="WB2" onclick="post_save()" id="insert-or-update">출간하기</button>
+            <button class="WB2" onclick="post_save_or_update()" id="insert-or-update">출간하기</button>
             <div></div>
         </div>
     </div>

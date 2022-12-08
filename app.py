@@ -17,9 +17,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
+                     user="",
                      db='ojijo',
-                     password='wrik3856!!',
+                     password='',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -178,30 +178,24 @@ def post_save():
   cur.execute(sql)
   cur.fetchall()
   db.commit()
-  borad_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > borad_id에 저장
+  board_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > board_id에 저장
   cur.close()
 
-  return redirect(url_for("home"))
+  return jsonify({"result":board_id})
 
+@app.route('/post_up', methods=["POST"])
+def post_up():
+  id = request.form["bd_id_give"]
+  bd_title = request.form["bd_title_give"]
+  bd_content = request.form["bd_content_give"]
 
-# 게시글 가져오기
+  cur = db.cursor()
+  sql = "UPDATE board SET bd_title = %s, bd_content = %s WHERE id = %s"
+  cur.execute(sql, (bd_title, bd_content, id))
+  db.commit()
+  cur.close()
 
-
-# 게시글 업데이트
-# @app.route('/post_up', methods=["POST"])
-# def post_up():
-#     bd_title = request.form['bd_title_give']
-#     bd_content = request.form['bd_content_give']
-#     user_nk = session.get("user_nk")
-#
-#     sql = """insert into board (bd_title, bd_content, user_nk) Values ('%s', '%s');""" %(bd_title, bd_content, user_nk)
-#
-#     cur.execute(sql)
-#     cur.fetchall()
-#     db.commit()
-#     cur.close()
-#
-#     return redirect(url_for("home"))
+  return jsonify({"result":id})
 
 
 # 상세글에서 수정 버튼 클릭 시

@@ -4,8 +4,6 @@ import shutil
 import boto3
 from botocore.exceptions import ClientError
 
-
-
 app = Flask(__name__)
 
 # [id:a,pw:b] 라인 딕셔너리 형식으로 받아오기 참고A
@@ -227,6 +225,7 @@ def post_save():
 
   sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
 
+  cur=db.cursor()
   cur.execute(sql)
   cur.fetchall()
   db.commit()
@@ -344,7 +343,6 @@ def updating_write():
   board_id_receive = request.json.get("board_id")
   print("수정 잘 되고 있나? ", board_id_receive)
   return jsonify({'msg': 1})
-
 
 
 if __name__ == '__main__':

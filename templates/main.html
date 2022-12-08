@@ -64,14 +64,22 @@
 </style>
 <script>
     $(document).ready(function () {
-        show_table();
+        show_table(1);
+    });
+    var page = 2;
+    $(window).scroll(function() {
+    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        show_table(page);
+        alert('page가 변경됩니다.')
+      page++;
+    }
     });
 //  로그인하면 보여줌 (GET)
-    function show_table(){
+    function show_table(num){
          $.ajax({
             type: 'GET',
             url: '/getMain',
-            data: { },
+            data: {num:num},
             success: function (response) {
                 for(let i=0; i< response.length; i++ ){
                     let title = response[i]["bd_title"]

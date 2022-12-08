@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import os
 import shutil
+import boto3
+from botocore.exceptions import ClientError
+
+
 
 app = Flask(__name__)
 
@@ -17,9 +21,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="",
+                     user="lee",
                      db='ojijo',
-                     password='',
+                     password='spartatest',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -138,8 +142,22 @@ def join():
 
 @app.route("/mypage", methods=["GET", "POST"])
 def mypage():
-  return render_template('mypage.html')
-
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
+  curs.execute(sql, (session.get('user_nk')))
+  param = curs.fetchone()
+  curs.close()
+  return render_template('mypage.html' , param =param)
+@app.route("/mypage/fp", methods=["GET", "POST"])
+def mypagefp():
+  user_fp = request.form['user_fp']
+  user_nk = session.get('user_nk')
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql ="update users set user_fp = %s where user_nk = %s"
+  curs.execute(sql,(user_fp,user_nk))
+  db.commit();
+  curs.close()
+  return jsonify({"msg":"프로필이 변경 되었습니다."})
 
 @app.route("/personal", methods=["GET", "POST"])
 def personal():
@@ -149,44 +167,6 @@ def personal():
 @app.route("/write", methods=["GET", "POST"])
 def write():
   return render_template('post_write.html')
-
-
-# 게시글 저장
-@app.route('/post_save', methods=["POST"])
-def post_save():
-    bd_title = request.form['bd_title_give']
-    bd_content = request.form['bd_content_give']
-    user_nk = session.get("user_nk")
-
-    sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
-
-    cur.execute(sql)
-    cur.fetchall()
-    db.commit()
-    cur.close()
-
-    return redirect(url_for("home"))
-
-
-# 게시글 가져오기
-
-
-
-# 게시글 업데이트
-# @app.route('/post_up', methods=["POST"])
-# def post_up():
-#     bd_title = request.form['bd_title_give']
-#     bd_content = request.form['bd_content_give']
-#     user_nk = session.get("user_nk")
-#
-#     sql = """insert into board (bd_title, bd_content, user_nk) Values ('%s', '%s');""" %(bd_title, bd_content, user_nk)
-#
-#     cur.execute(sql)
-#     cur.fetchall()
-#     db.commit()
-#     cur.close()
-#
-#     return redirect(url_for("home"))
 
 
 # 상세 게시물 페이지

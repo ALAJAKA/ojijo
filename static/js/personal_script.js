@@ -36,11 +36,12 @@ function listing() {
                 let bd_title = rows[i]['bd_title']
                 let bd_content = rows[i]['bd_content']
                 let bd_writeDate = rows[i]['bd_writeDate']
+                let bd_id = rows[i]['id']
                 let temp_html2 = `<div class="contents">
-                                    <a href="board.html">
+                                    <a href="/boards/${bd_id}">
                                     <div class="content_img"><img src="../static/personal_img/nap.png" alt="post-thumbnail" ></div>
                                     </a>
-                                    <a href="board.html">${bd_title}</a>
+                                    <a href=/boards/${bd_id}">${bd_title}</a>
                                     <p>${bd_content}</p>
                                     <div class="subinfo">${bd_writeDate} · 0개의 댓글 · ♥0</div>
                                  </div>`

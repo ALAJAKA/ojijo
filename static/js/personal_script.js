@@ -17,7 +17,7 @@ function listing() {
 
             // profile append
             let temp_html = `<div class="profile">
-                                <a href="https://velog.io/@squirrelswj"><img src="../static/personal_img/sungwookjung.jpg"></a>
+                                <a href="https://velog.io/@squirrelswj"><img src="../static/personal_img/night.png"></a>
                                 <div class="profile_text">
                                     <a href="https://velog.io/@squirrelswj"><div class="name">${user_nk}</div></a>
                                     <div class="discription">${user_fp}</div>

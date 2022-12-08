@@ -17,9 +17,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
-                     db='sparta_test',
-                     password='1q2w3e4r',
+                     user="",
+                     db='ojijo',
+                     password='',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -137,6 +137,44 @@ def write():
   return render_template('post_write.html')
 
 
+# 게시글 저장
+@app.route('/post_save', methods=["POST"])
+def post_save():
+    bd_title = request.form['bd_title_give']
+    bd_content = request.form['bd_content_give']
+    user_nk = session.get("user_nk")
+
+    sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
+
+    cur.execute(sql)
+    cur.fetchall()
+    db.commit()
+    cur.close()
+
+    return redirect(url_for("home"))
+
+
+# 게시글 가져오기
+
+
+
+# 게시글 업데이트
+# @app.route('/post_up', methods=["POST"])
+# def post_up():
+#     bd_title = request.form['bd_title_give']
+#     bd_content = request.form['bd_content_give']
+#     user_nk = session.get("user_nk")
+#
+#     sql = """insert into board (bd_title, bd_content, user_nk) Values ('%s', '%s');""" %(bd_title, bd_content, user_nk)
+#
+#     cur.execute(sql)
+#     cur.fetchall()
+#     db.commit()
+#     cur.close()
+#
+#     return redirect(url_for("home"))
+
+
 # 상세 게시물 페이지
 @app.route("/boards/<board_id>", methods=["GET"])
 def board(board_id):
@@ -144,15 +182,9 @@ def board(board_id):
   sql = """SELECT b.id, b.bd_title, b.bd_content, b.user_nk, u.user_email
     , u.user_site, u.user_img, u.user_fp FROM board AS b 
     INNER JOIN users AS u ON b.user_nk = u.user_nk WHERE b.id = %s;"""
-  post_detail_result = query_mysql(sql, board_id_receive, 1)
-  # 해당 포스트에서 사용된 이미지
-  sql = "select * from board_img where board_id = %s"
-  img_result = query_mysql(sql, board_id_receive, 1)
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
-  if img_result != ():
-    doc["images"] = img_result
 
   return render_template("board.html", user_nk=session.get("user_nk"), detailDict=doc)
 

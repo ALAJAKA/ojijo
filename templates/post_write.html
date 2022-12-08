@@ -25,32 +25,56 @@
             obj.style.maxHeight = '1050px';
         }
 
-        function CancelW() {
-            if (confirm("그만 하시겠습니까 ?") == true) {
-                location.href='board.html'
-
-            }
-        }
-
-        function bd_save() {
+        function post_save() {
             let bd_title = $("#bd_title").val();
             let bd_content = $("#bd_content").val();
-
             if (bd_title == "") {
                 return alert('제목을 입력해 주세요.')
             }
 
             $.ajax({
                 type: "POST",
-                url: "/bd_post",
+                url: "/post_save",
                 data: {'bd_title_give': bd_title,
-                    'bd_content_give': bd_content},
+                    'bd_content_give': bd_content
+                },
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
                 }
             });
         }
+
+        function post_get() {
+            $.ajax({
+                type: "GET",
+                url: "/post_get",
+                data: {},
+                success: function (response) {
+                    let
+                }
+            })
+        }
+
+        // function post_up() {
+        //     let bd_title = $("#bd_title").val();
+        //     let bd_content = $("#bd_content").val();
+        //
+        //     if (bd_title == "") {
+        //         return alert('제목을 입력해주세요.')
+        //     }
+        //
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/post_up",
+        //         data: {'bd_title_give': bd_title,
+        //         'bd_content_give' : bd_content},
+        //         success: function (response) {
+        //             alert(response['msg'])
+        //             window.location.reload()
+        //         }
+        //     });
+        // }
 
 
     </script>
@@ -66,8 +90,13 @@
                        placeholder="당신의 이야기를 적어보세요 .." maxlength="8000"></textarea>
         </div>
         <div class="WriteBtn">
-            <button class="WB1" onclick="CancelW()">←나가기</button>
-            <button class="WB2" onclick="bd_save()">출간하기</button>
+
+<!--            <button class="WB1" onclick="history.back()">←나가기</button>-->
+<!--            <button class="WB2" onclick="bd_up()">수정하기</button>-->
+
+            <button class="WB1" onclick="history.back()">←나가기</button>
+            <button class="WB2" onclick="post_save()">출간하기</button>
+
         </div>
     </div>
     <div class="Preview">

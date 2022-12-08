@@ -17,9 +17,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="",
+                     user="root",
                      db='ojijo',
-                     password='',
+                     password='wrik3856!!',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -173,15 +173,15 @@ def post_save():
   bd_content = request.form['bd_content_give']
   user_nk = session.get("user_nk")
 
-    sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
+  sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
 
-    cur.execute(sql)
-    cur.fetchall()
-    db.commit()
-    borad_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > borad_id에 저장
-    cur.close()
+  cur.execute(sql)
+  cur.fetchall()
+  db.commit()
+  borad_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > borad_id에 저장
+  cur.close()
 
-    return redirect(url_for("home"))
+  return redirect(url_for("home"))
 
 
 # 게시글 가져오기

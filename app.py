@@ -18,8 +18,8 @@ from datetime import timedelta
 db = pymysql.connect(host="localhost",
                      port=3306,
                      user="root",
-                     db='sparta_test',
-                     password='1q2w3e4r',
+                     db='ojijo',
+                     password='wrik3856!!',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -34,6 +34,20 @@ app.permanent_session_lifetime = timedelta(hours=1)
 @app.route("/", methods=["GET", "POST"])  # app.route("/" <- 경로 설정
 def home():  # 함수명은 중복이 불가
   return render_template('main.html')
+
+@app.route("/getMain", methods=["GET"])
+def getMain():
+  # 1. 보드테이블 모든 게시물 정보를 가져온다
+  cur = db.cursor(pymysql.cursors.DictCursor) #장바구니
+  sql = "SELECT * FROM board"
+  cur.execute(sql)
+  # 2. 변수에 담는다
+  curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
+  for a in curs:
+    print(a)     #전부 가져왔는지 확인
+  cur.close()  # -> 커서를 닫아준다  #장바구니 반환
+  # 3. 다시 메인html으로 보내준다.
+  return jsonify(curs)
 
 
 # 로그인 페이지

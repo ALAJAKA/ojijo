@@ -97,18 +97,18 @@ alter table board add constraint foreign key(user_nk)references users(user_nk);
 
 - **회원 기능**
     - [✅]  회원 가입, 로그인 구현
-    - [ ]  마이 페이지 프로필 수정 구현
+    - [✅]  마이 페이지 프로필 수정 구현
     - [✅]  비밀번호 DB에 암호화 -보류
 
 - **DB**
     - [✅]  MySQL 정규화 작업
-    - [ ]  MySQL Join 쿼리문을 활용 하여 데이터 전달
+    - [✅]  MySQL Join 쿼리문을 활용 하여 데이터 전달
 
 - **CRUD**
-    - [ ]  게시글 쓰기 기능 구현
+    - [✅]  게시글 쓰기 기능 구현
     - [✅]  게시글 글 보여주기 구현
-    - [ ]  게시글 글 수정 구현
-    - [ ]  게시글 글 삭제 구현
+    - [✅]  게시글 글 수정 구현
+    - [✅]  게시글 글 삭제 구현
 
 - **GIT** 2022-12-06 설정 완료
     - [✅]  git add / commit / push 활용

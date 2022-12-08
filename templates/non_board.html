@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  <style>
+    .non-board {
+      font-size: 100px;
+      margin-top: 150px;
+    }
+    #count {
+      font-size: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="non-board">해당 페이지는 존재하지 않습니다</div>
+  <div id="count"><span id="num">5</span>초 뒤, 메인 페이지로 이동합니다.</div>
+</body>
+<script>
+    window.onload = function () {
+        let sec = 4
+        setInterval(function () {
+            document.querySelector("#num").innerText = sec
+            sec--;
+            if (sec === 0) {
+                location.href='/';
+            }
+        }, 1000)
+    }
+</script>
+</html>

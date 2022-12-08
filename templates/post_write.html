@@ -19,6 +19,29 @@
 
 
     <script>
+        // 페이지를 띄운 곳이 "새 글 작성" 인지, "수정하기" 인지를 판단.
+        $(document).ready(function () {
+            check_status();
+        });
+
+        const check_status = () => {
+            const receive_var = `{{status}}`
+            if (receive_var === "0") {
+            } else if (receive_var === "1") {
+                const board = '{{board}}'
+                const board_change = board.replace(/&#39;/g, `"`)
+                const board_parse = JSON.parse(board_change)
+
+                const title_area = document.querySelector("#bd_title")
+                const content_area = document.querySelector("#bd_content")
+                const btn = document.querySelector("#insert-or-update")
+                title_area.textContent = board_parse["bd_title"]
+                content_area.textContent = board_parse["bd_content"]
+                btn.innerHTML = "수정하기"
+            }
+        }
+
+
         function bdScroll(obj) {
             obj.style.height = '2px';
             obj.style.height = (12 + obj.scrollHeight) + 'px';
@@ -95,8 +118,8 @@
 <!--            <button class="WB2" onclick="bd_up()">수정하기</button>-->
 
             <button class="WB1" onclick="history.back()">←나가기</button>
-            <button class="WB2" onclick="post_save()">출간하기</button>
-
+            <button class="WB2" onclick="post_save()" id="insert-or-update">출간하기</button>
+            <div></div>
         </div>
     </div>
     <div class="Preview">

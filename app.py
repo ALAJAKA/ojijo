@@ -42,11 +42,13 @@ def home():  # 함수명은 중복이 불가
 @app.route("/getMain", methods=["GET"])
 def getMain():
   # 1. 보드테이블 모든 게시물 정보를 가져온다
-  cur = db.cursor(pymysql.cursors.DictCursor) #장바구니
+  cur = db.cursor(pymysql.cursors.DictCursor)  # 장바구니
   sql = "SELECT * FROM board"
   cur.execute(sql)
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
+  for a in curs:
+    print(a)     #전부 가져왔는지 확인
   cur.close()  # -> 커서를 닫아준다  #장바구니 반환
   # 3. 다시 메인html으로 보내준다.
   return jsonify(curs)
@@ -199,7 +201,60 @@ def personal():
 
 @app.route("/write", methods=["GET", "POST"])
 def write():
-  return render_template('post_write.html')
+  return render_template('post_write.html', status="0")
+
+
+# 게시글 저장
+@app.route('/post_save', methods=["POST"])
+def post_save():
+  bd_title = request.form['bd_title_give']
+  bd_content = request.form['bd_content_give']
+  user_nk = session.get("user_nk")
+
+  sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
+
+  cur.execute(sql)
+  cur.fetchall()
+  db.commit()
+  borad_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > borad_id에 저장
+  cur.close()
+
+  return redirect(url_for("home"))
+
+
+# 게시글 가져오기
+
+
+# 게시글 업데이트
+# @app.route('/post_up', methods=["POST"])
+# def post_up():
+#     bd_title = request.form['bd_title_give']
+#     bd_content = request.form['bd_content_give']
+#     user_nk = session.get("user_nk")
+#
+#     sql = """insert into board (bd_title, bd_content, user_nk) Values ('%s', '%s');""" %(bd_title, bd_content, user_nk)
+#
+#     cur.execute(sql)
+#     cur.fetchall()
+#     db.commit()
+#     cur.close()
+#
+#     return redirect(url_for("home"))
+
+
+# 상세글에서 수정 버튼 클릭 시
+@app.route('/write/<board_id>', methods=["GET"])
+def board_update(board_id):
+  board_id_receive = int(board_id)
+
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = "SELECT id, bd_title, bd_content, user_nk FROM board WHERE id = %s"
+  curs.execute(sql, board_id_receive)
+  board_result = curs.fetchone()  # -> 결과값을 1개만 가져올 듯.
+
+  curs.close()  # -> 커서를 닫아준다
+
+  return render_template('post_write.html', status="1", board=board_result)
 
 
 # 상세 게시물 페이지

@@ -6,7 +6,7 @@ $(document).ready(function () {
 function listing() {
     $.ajax({
         type: 'GET',
-        url: '/personal',
+        url: '/personal/site',
         data: {},
         success: function (response) {
             let rows = response['result']

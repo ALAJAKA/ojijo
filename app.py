@@ -21,9 +21,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="",
+                     user="root",
                      db='ojijo',
-                     password='',
+                     password='alskdjfh',
                      charset='utf8')
 
 cur = db.cursor(pymysql.cursors.DictCursor)
@@ -38,6 +38,7 @@ app.permanent_session_lifetime = timedelta(hours=1)
 # 메인페이지
 @app.route("/", methods=["GET", "POST"])  # app.route("/" <- 경로 설정
 def home():  # 함수명은 중복이 불가
+
   return render_template('main.html')
 
 @app.route("/getMain", methods=["GET"])
@@ -201,14 +202,17 @@ def delete_user():
 def personal():
   return render_template('personal.html')
 
-@app.route("/personal", methods=["GET"])
+@app.route("/personal/site", methods=["GET"])
 def get_personal():
-    sql = "select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate\
-            from users\
-            left join board on users.user_nk = board.user_nk\
-            where users.user_nk = '람쥐'\
-            order by board.bd_writeDate desc;"
-    cur.execute(sql)
+    user_nk = session.get("user_nk")
+    print(user_nk)
+    cur = db.cursor(pymysql.cursors.DictCursor)
+    sql = """select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate
+            from users
+            left join board on users.user_nk = board.user_nk
+            where users.user_nk = %s
+            order by board.bd_writeDate desc;"""
+    cur.execute(sql,user_nk)
     data = cur.fetchall()
     print(data)
     return jsonify({'result': data})
@@ -221,6 +225,7 @@ def write():
 # 게시글 저장
 @app.route('/post_save', methods=["POST"])
 def post_save():
+  cur = db.cursor(pymysql.cursors.DictCursor)
   bd_title = request.form['bd_title_give']
   bd_content = request.form['bd_content_give']
   user_nk = session.get("user_nk")

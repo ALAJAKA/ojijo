@@ -19,11 +19,11 @@ import bcrypt
 from datetime import timedelta
 
 # 디비 연결하기
-db = pymysql.connect(host="localhost",
+db = pymysql.connect(host="",
                      port=3306,
-                     user="lee",
+                     user="",
                      db='ojijo',
-                     password='spartatest',
+                     password='',
                      charset='utf8')
 cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -47,8 +47,6 @@ def getMain():
   cur.execute(sql)
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
-  for a in curs:
-    print(a)     #전부 가져왔는지 확인
   cur.close()  # -> 커서를 닫아준다  #장바구니 반환
   # 3. 다시 메인html으로 보내준다.
   return jsonify(curs)
@@ -146,6 +144,8 @@ def mypage():
   sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
   curs.execute(sql, (session.get('user_nk')))
   param = curs.fetchone()
+  if param['user_site'] == None:
+    param['user_site'] = session.get('user_nk') +'.5JIJO'
   curs.close()
   return render_template('mypage.html' , param =param)
 @app.route("/mypage/fp", methods=["GET", "POST"])
@@ -158,6 +158,39 @@ def mypagefp():
   db.commit();
   curs.close()
   return jsonify({"msg":"프로필이 변경 되었습니다."})
+@app.route("/mypage/site", methods=["GET", "POST"])
+def mypagesite():
+  user_site = request.form['user_site']
+  user_nk = session.get('user_nk')
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql ="update users set user_site = %s where user_nk = %s"
+  curs.execute(sql,(user_site,user_nk))
+  db.commit();
+  curs.close()
+  return jsonify({"msg":"site가 변경 되었습니다."})
+@app.route('/mypage/del',methods=['POST'])
+def delete_user():
+  a = bool(session)
+  if a== False:
+    return redirect(url_for("home"))
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  user_nk = session.get('user_nk')
+  session.clear()
+  sql = 'select id from users where user_nk =%s'
+  curs.execute(sql,user_nk)
+  id_1 = curs.fetchone()
+  curs.close()
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = 'delete from ojijo.board where user_nk =%s'
+  curs.execute(sql,user_nk)
+  db.commit()
+  curs.close()
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = "DELETE FROM ojijo.users WHERE id = %s "
+  curs.execute(sql,id_1['id'])
+  db.commit()
+  curs.close()
+  return jsonify({'msg':'회원탈퇴 완료'})
 
 @app.route("/personal", methods=["GET", "POST"])
 def personal():

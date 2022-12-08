@@ -150,16 +150,10 @@
         const board_id = "{{detailDict['detail']['id']}}"
 
         if (user_nk_board === user_nk_session) {
-            console.log("보낼 board 아이디는 이것! : " + board_id)
-            $.ajax({
-                type: "PUT",
-                url: "/writing",
-                contentType: "application/json; charset=utf-8",
-                data: board_id,
-                success: function (response) {
-                    alert(response['msg'])
-                }
-            });
+            const check = confirm("수정 하시겠습니까?")
+            if (check) {
+                location.href=`/write/${board_id}`
+            }
         }
     }
 

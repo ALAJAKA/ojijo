@@ -270,17 +270,10 @@ def board(board_id):
   curs.execute(sql, board_id_receive)
   post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
 
-  # 해당 포스트에서 사용된 이미지
-  sql = "select * from board_img where board_id = %s"
-  curs.execute(sql, board_id_receive)
-  img_result = curs.fetchall()
-
   curs.close()  # -> 커서를 닫아준다
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
-  if img_result != ():
-    doc["images"] = img_result
 
   return render_template("board.html", user_nk=session.get("user_nk"), detailDict=doc)
 
@@ -323,10 +316,6 @@ def delete_post():
   curs = db.cursor(pymysql.cursors.DictCursor)
 
   sql = "delete from board where id = %s"
-  curs.execute(sql, board_id_receive)
-  db.commit()
-
-  sql = "delete from board_img where board_id = %s"
   curs.execute(sql, board_id_receive)
   db.commit()
 

@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import os
 import shutil
+import boto3
+from botocore.exceptions import ClientError
+
+
 
 app = Flask(__name__)
 
@@ -21,6 +25,7 @@ db = pymysql.connect(host="localhost",
                      db='ojijo',
                      password='',
                      charset='utf8')
+
 cur = db.cursor(pymysql.cursors.DictCursor)
 
 # 해쉬화를 위해 필요
@@ -35,7 +40,6 @@ app.permanent_session_lifetime = timedelta(hours=1)
 def home():  # 함수명은 중복이 불가
   return render_template('main.html')
 
-
 @app.route("/getMain", methods=["GET"])
 def getMain():
   # 1. 보드테이블 모든 게시물 정보를 가져온다
@@ -45,7 +49,7 @@ def getMain():
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
   for a in curs:
-    print(a)  # 전부 가져왔는지 확인
+    print(a)     #전부 가져왔는지 확인
   cur.close()  # -> 커서를 닫아준다  #장바구니 반환
   # 3. 다시 메인html으로 보내준다.
   return jsonify(curs)
@@ -143,6 +147,10 @@ def mypage():
   sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
   curs.execute(sql, (session.get('user_nk')))
   param = curs.fetchone()
+  if param['user_fp'] == None:
+    param['user_fp'] = ''
+  if param['user_site'] == None:
+    param['user_site'] = session.get('user_nk') +'.5JIJO'
   curs.close()
   return render_template('mypage.html' , param =param)
 @app.route("/mypage/fp", methods=["GET", "POST"])
@@ -155,11 +163,55 @@ def mypagefp():
   db.commit();
   curs.close()
   return jsonify({"msg":"프로필이 변경 되었습니다."})
+@app.route("/mypage/site", methods=["GET", "POST"])
+def mypagesite():
+  user_site = request.form['user_site']
+  user_nk = session.get('user_nk')
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql ="update users set user_site = %s where user_nk = %s"
+  curs.execute(sql,(user_site,user_nk))
+  db.commit();
+  curs.close()
+  return jsonify({"msg":"site가 변경 되었습니다."})
+@app.route('/mypage/del',methods=['POST'])
+def delete_user():
+  a = bool(session)
+  if a== False:
+    return redirect(url_for("home"))
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  user_nk = session.get('user_nk')
+  session.clear()
+  sql = 'select id from users where user_nk =%s'
+  curs.execute(sql,user_nk)
+  id_1 = curs.fetchone()
+  curs.close()
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = 'delete from ojijo.board where user_nk =%s'
+  curs.execute(sql,user_nk)
+  db.commit()
+  curs.close()
+  curs = db.cursor(pymysql.cursors.DictCursor)
+  sql = "DELETE FROM ojijo.users WHERE id = %s "
+  curs.execute(sql,id_1['id'])
+  db.commit()
+  curs.close()
+  return jsonify({'msg':'회원탈퇴 완료'})
 
 @app.route("/personal", methods=["GET", "POST"])
 def personal():
   return render_template('personal.html')
 
+@app.route("/personal", methods=["GET"])
+def get_personal():
+    sql = "select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate\
+            from users\
+            left join board on users.user_nk = board.user_nk\
+            where users.user_nk = '람쥐'\
+            order by board.bd_writeDate desc;"
+    cur.execute(sql)
+    data = cur.fetchall()
+    print(data)
+    return jsonify({'result': data})
 
 @app.route("/write", methods=["GET", "POST"])
 def write():
@@ -217,6 +269,7 @@ def board_update(board_id):
 @app.route("/boards/<board_id>", methods=["GET"])
 def board(board_id):
   board_id_receive = int(board_id)
+
   curs = db.cursor(pymysql.cursors.DictCursor)
 
   sql = """SELECT b.id, b.bd_title, b.bd_content, b.user_nk, u.user_email
@@ -262,7 +315,7 @@ def other_detail():
   return jsonify({'msg': 'detail 이전, 이후 글 get!', "result": doc})
 
 
-# 상세 게시물 삭제 혹은 수정
+# 상세 게시물 삭제
 @app.route("/boards", methods=["DELETE"])
 def delete_post():
   board_id_receive = request.form["board_id_give"]
@@ -281,6 +334,15 @@ def delete_post():
   if os.path.exists(folder_path):
     shutil.rmtree(folder_path)
 
+  return jsonify({'msg': 1})
+
+
+# 상세 게시물 수정 하기 버튼 클릭 시
+@app.route("/write", methods=["PUT"])
+def updating_write():
+  print("gkgkgkgkgkgk")
+  board_id_receive = request.json.get("board_id")
+  print("수정 잘 되고 있나? ", board_id_receive)
   return jsonify({'msg': 1})
 
 

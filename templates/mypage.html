@@ -17,6 +17,14 @@
         let text = $('#user_fp').text();
         $('#userfp').val(text);
     }
+    function view_btn2(){
+        $('#up2').css('display','none');
+        $('#user_site').css('display','none');
+        $('#savebtn2').css('display','block');
+        $('#usersite').css('display','block');
+        let text = $('#user_site').text().replace('.5JIJO','');
+        $('#usersite').val(text);
+    }
 
     function fpsave(){
         let val1 = $('#userfp').val();
@@ -30,6 +38,31 @@
             }
         });
     }
+    function sitesave(){
+        let val1 = $('#usersite').val()+'.5JIJO';
+        console.log(val1)
+        $.ajax({
+            type:"POST",
+            url:"/mypage/site",
+            data:{user_site : val1},
+            success:function(response){
+                alert(response['msg']);
+                window.location.reload();
+            }
+        });
+    }
+    function userDel(){
+        $.ajax({
+            type:"POST",
+            url:"/mypage/del",
+            data:{},
+            success:function(response){
+                alert(response['msg']);
+                window.location.href="/";
+            }
+        });
+    }
+
 </script>
 {% endblock %}
 
@@ -46,8 +79,13 @@
                 <div style="width: 100%; height:200px; ">
 {#                    <img src="https://leejk-folder.s3.ap-northeast-2.amazonaws.com/aa.png">#}
                 </div>
-                <button style="text-align: center; margin-left:31%; margin-top:10px;">이미지 업로드</button><br/>
-                <button style="text-align: center; margin-left:33%; margin-top:10px;">이미지 제거</button>
+                  <from action="/uploader" method="POST" enctype="multipart/form-data">
+                      <input type="file" id="imgup" name="file" >
+                      <label for="imgup" style="text-align: center; margin-left:31%; margin-top:10px;padding:5px;border-radius: 5px; border: 1px solid black">이미지 선택</label>
+                      <input type="submit" id="upd" />
+                      <label for="upd" style="text-align: center; margin-left:31%; margin-top:10px;padding:5px;border-radius: 5px; border: 1px solid black">이미지 넣기</label>
+
+                  </from>
               </div>
               <div class ="col-md-6" style="padding-left:20px; border-left:1px solid black;">
                 <h2>{{ session['user_nk'] }}</h2>
@@ -61,10 +99,16 @@
               <div class ="col-md-3"></div>
               <div class="container-fluid" id = "content" style="margin-top:80px; padding-left:30px;">
                 <div class="row">
-                  <div class="col-md-3">벨로그 제목</div>
-                  <div class="col-md-8" id = "user_site"></div>
+                  <div class="col-md-3">
+                      <span id ="user_site">{{ param['user_site'] }}</span>
+                  <input style="height:30px; display: none;" type="text" class="form-control" id="usersite"  placeholder="5jijo제목을 입력해주세요.">
+                  </div>
+                  <div class="col-md-8">
+                      <button id="up2" onclick="view_btn2()">수정하기</button>
+                      <button id="savebtn2" style="display: none" onclick="sitesave()">저장</button>
+                  </div>
                 </div>
-                  <div>나의 벨로그 제목 입니다.</div>
+                  <div>나의 5jijo 제목 입니다.</div>
                   <hr>
                   <div class="row">
                   <div class="col-md-3">이메일 주소</div>
@@ -75,7 +119,7 @@
                   <div class="row">
                   <div class="col-md-3">회원 탈퇴</div>
                   <div class="col-md-8">
-                      <button>회원 탈퇴</button>
+                      <button onclick="userDel()">회원 탈퇴</button>
                   </div>
                 </div>
                 <div>탈퇴 시 작성하신 포스트 및 댓글이 모두 삭제되며 복구되지 않습니다.</div>

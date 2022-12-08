@@ -4,51 +4,18 @@
     {{ super() }}
     <!-- CSS -->
     <link href="../static/css/personal_style.css" rel="stylesheet">
+    <script src="../static/js/personal_script.js"></script>
+
 {% endblock %}
 {% block content %}
 <!-- profile_box -->
 <div class="main_box">
-    <div class="profile_box">
-        <div class="profile">
-            <a href="https://velog.io/@squirrelswj"><img src="../static/personal_img/sungwookjung.jpg"></a>
-            <div class="profile_text">
-                <a href="https://velog.io/@squirrelswj"><div class="name">Squirrelswj</div></a>
-                <div class="discription">안녕하세요 정성욱 입니다. 자세한 링크는 소개란에 있습니다</div>
-            </div>
-        </div>
-        <div class="line"></div>
-        <div class="icon">
-            <a href="https://github.com/squirrelswj" target="_black" style="margin-left:0px"><img src="../static/personal_img/git_icon.svg"></a>
-            <a href="https://velog.io" target="_black"><img src="../static/personal_img/house.png"></a>
-            <a href="squirrelswj@gmail.com" target="_black"><img src="../static/personal_img/email.png"></a>
-        </div>
+    <div class="profile_box" id="profile">
+
     </div>
     <!-- contents_box -->
-    <div class="contents_box" id="content">
-        <div class="contents">
-            <a href="board.html">
-                <div class="content_img"><img src="../static/personal_img/nap.png" alt="post-thumbnail" ></div>
-            </a>
-            <a href="board.html">제목 : 레이아웃만 완성했음</a>
-            <p>이제겨우 레이아웃을 완성했다. 이제 mysql 과 git을 시작해볼까....내 페이지에 활용될 db명은 velog_id,e_mail,git_address,myprofile,title,content,write_date,like...또..뭐가필요할까</p>
-            <div class="subinfo">2022년 12월 04일 · 0개의 댓글 · ♥0</div>
-        </div>
-        <div class="contents">
-            <a href="">
-                <div class="content_img"><img src="../static/personal_img/cafe.png" alt="post-thumbnail"></div>
-            </a>
-            <a href="">제목 : 레이아웃만 완성했음</a>
-            <p>이제겨우 레이아웃을 완성했다. 이제 mysql 과 git을 시작해볼까....내 페이지에 활용될 db명은 velog_id,e_mail,git_address,myprofile,title,content,write_date,like...또..뭐가필요할까</p>
-            <div class="subinfo">2022년 12월 04일 · 0개의 댓글 · ♥0</div>
-        </div>
-        <div class="contents">
-            <a href="">
-                <div class="content_img"><img src="../static/personal_img/night.png" alt="post-thumbnail"></div>
-            </a>
-            <a href="">제목 : 레이아웃만 완성했음</a>
-            <p>이제겨우 레이아웃을 완성했다. 이제 mysql 과 git을 시작해볼까....내 페이지에 활용될 db명은 velog_id,e_mail,git_address,myprofile,title,content,write_date,like...또..뭐가필요할까</p>
-            <div class="subinfo">2022년 12월 04일 · 0개의 댓글 · ♥0</div>
-        </div>
+    <div class="contents_box" id="contents">
+
     </div>
 </div>
 

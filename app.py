@@ -291,6 +291,9 @@ def board(board_id):
 
   curs.close()  # -> 커서를 닫아준다
 
+  if post_detail_result == ():
+    return render_template("non_board.html")
+
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
 

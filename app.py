@@ -148,7 +148,7 @@ def personal():
 
 @app.route("/write", methods=["GET", "POST"])
 def write():
-  return render_template('post_write.html')
+  return render_template('post_write.html', status="0")
 
 
 # 게시글 저장
@@ -163,17 +163,31 @@ def post_save():
     cur.execute(sql)
     cur.fetchall()
     db.commit()
+    borad_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > borad_id에 저장
     cur.close()
 
-    return redirect(url_for("home"))
+    return jsonify({"id":borad_id})
 
 
 # 게시글 가져오기
+@app.route("/post_get", methods=["GET"])
+def post_get(board_id):
+  board_id_receive = int(board_id)
 
+  cur = db.cursor(pymysql.cursors.DictCursor)
+  sql = "SELECT id, bd_title, bd_content, user_nk FROM board AS b INNER JOIN users AS u on b.user_nk = u.user_nk WHERE b.id = %s;"
+  cur.execute(sql, board_id_receive)
+
+  cur.close()
+
+
+  print(doc["detail"])
+
+  return render_template("post_write.html", user_nk=session.get("user_nk"), detailDict=doc)
 
 
 # 게시글 업데이트
-# @app.route('/post_up', methods=["POST"])
+# @app.route('/post_up', methods=["UPDATE"])
 # def post_up():
 #     bd_title = request.form['bd_title_give']
 #     bd_content = request.form['bd_content_give']
@@ -202,17 +216,10 @@ def board(board_id):
   curs.execute(sql, board_id_receive)
   post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
 
-  # 해당 포스트에서 사용된 이미지
-  sql = "select * from board_img where board_id = %s"
-  curs.execute(sql, board_id_receive)
-  img_result = curs.fetchall()
-
   curs.close()  # -> 커서를 닫아준다
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
-  if img_result != ():
-    doc["images"] = img_result
 
   return render_template("board.html", user_nk=session.get("user_nk"), detailDict=doc)
 

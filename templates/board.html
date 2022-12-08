@@ -136,6 +136,7 @@
 
         if (check) {
             const board_id = "{{detailDict['detail']['id']}}"
+            console.log("삭제를 위해 : " + board_id)
             $.ajax({
                 type: "DELETE",
                 url: "/boards",
@@ -206,7 +207,7 @@
                     <button type="button" class="btn btn-success" style="background-color: dodgerblue;
                         border:0px;" onclick="update_board()"><span style="color: white">게시글 수정 하기</span></button>
                     <button type="button" class="btn btn-danger" style="background-color: #dc3545;
-                        border:0px;" click="delete_board()"><span style="color: white">게시글 삭제 하기</span></button>
+                        border:0px;" onclick="delete_board()"><span style="color: white">게시글 삭제 하기</span></button>
                 </div>
             </section>
 

@@ -68,7 +68,7 @@ def uploader_file():
 
 @app.route("/getMain/", methods=["GET"])
 def getMain():
-  num = request.args.get('num');
+  num = request.args.get('num')
   num =int(num)
   print(num)
   # 1. 보드테이블 모든 게시물 정보를 가져온다

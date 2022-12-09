@@ -97,8 +97,15 @@ create table board(
     bd_updateDate datetime,
     user_nk varchar(20)
 );
+CREATE TABLE board_img (
+	id int PRIMARY KEY AUTO_INCREMENT,
+	user_nk varchar(20) NOT NULL,
+	board_id int NOT NULL,
+	image varchar(50) NOT NULL
+)
 
 alter table board add constraint foreign key(user_nk)references users(user_nk);
+alter table board_img add constraint foreign key(user_nk) references board(user_nk);
 ```
 
 

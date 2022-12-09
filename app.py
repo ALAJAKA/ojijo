@@ -22,9 +22,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="root",
-                     db='sparta_test',
-                     password='1q2w3e4r',
+                     user="",
+                     db='ojijo',
+                     password='',
                      charset='utf8')
 
 cur = db.cursor(pymysql.cursors.DictCursor)

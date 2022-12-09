@@ -71,7 +71,7 @@ v1.0.1 -로그인 기능 구현
 
 v1.0.2 -CRUD구현 완료
 
-v1.0.3 -남는시간 추가기능 하고 싶은 것 정해서 구현하기
+v1.0.3 -남는시간 추가기능 (페이지네이션- 무한 스크롤링 , 프로필 이미지파일 업로드 , 글쓰기 이미지 여러개  
 
 -데이터 테이블(users,board)
 create database ojijo;<img width="674" alt="스크린샷 2022-12-09 오전 10 53 15" src="https://user-images.githubusercontent.com/116141914/206605811-e8d6129b-50fa-40ae-8762-30babc2dd82c.png">

@@ -18,17 +18,17 @@ import bcrypt
 # timedelta 는 정해진 시간을 표현하기 위해 사용됩니다.
 from datetime import timedelta
 
-access_key = [ACCESS_KEY]
-access_secret = [ACCESS_SECRET]
-bucket_name = [BUCKET_NAME]
-"""
-Connect to S3 Service 
-"""
-client_s3 = boto3.client(
-  's3',
-  aws_access_key_id=[ACCESS_KEY],
-  aws_secret_access_key=[ACCESS_SECRET]
-)
+# access_key = [ACCESS_KEY]
+# access_secret = [ACCESS_SECRET]
+# bucket_name = [BUCKET_NAME]
+# """
+# Connect to S3 Service
+# """
+# client_s3 = boto3.client(
+#   's3',
+#   aws_access_key_id=[ACCESS_KEY],
+#   aws_secret_access_key=[ACCESS_SECRET]
+# )
 
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
@@ -326,7 +326,7 @@ def post_up():
   print(f'잘 들어옴? {user_id_receive, user_nk_receive, post_title_receive, post_content_receive}')
 
   cur = db.cursor()
-  sql = "UPDATE board SET bd_title = %s, bd_content = %s WHERE id = %s"
+  sql = "UPDATE board SET bd_title = %s, bd_content = %s, bd_updateDate = default WHERE id = %s"
   cur.execute(sql, (post_title_receive, post_content_receive, board_id_receive))
   db.commit()
 

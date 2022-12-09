@@ -173,8 +173,11 @@
 
         <!-- Header -->
         <header id="header" class="alt">
+            {% if detailDict['detail']['user_img'] == None %}
             <div class="logo"><img src="../static/board_images/basic_img/default_profile.png" alt="" /></div>
-            <h1 id="nick-name" style="font-size: 50px; font-weight:bold;">{{detailDict["detail"]["user_nk"]}}</h1>
+            {% else %}
+            <div class="logo"><img src="{{detailDict["detail"]['user_img'] }}" alt="" /></div>
+            {% endif %}
             <div id="blog-wrap"><div id="blog"><a id="blog-link">{{detailDict['detail']['user_site']}}</a></div></div>
             <div id="email-wrap"><div id="email">{{detailDict["detail"]["user_email"]}}</div></div>
             <div id="user-fp-wrap"><div id="user-fp">{{detailDict["detail"]["user_fp"]}}</div></div>

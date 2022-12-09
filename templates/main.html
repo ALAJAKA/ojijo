@@ -86,14 +86,23 @@
             success: function (response) {
                 k = response[0];
                 for(let i=0; i< response.length; i++ ){
+                    let bd_id = response[i]["id"]
                     let title = response[i]["bd_title"]
                     let content = response[i]["bd_content"]
                     let todate = response[i]["bd_writeDate"]
                     let date_change = new Date (todate).toISOString().split('T')[0]
                     let nk = response[i]["user_nk"]
-                    let bd_id = response[i]["id"]
-                    let temp_html = `<div class="card" style="width: 18rem;" onclick="location.href='/boards/${bd_id}' ">
-                                        <img src="../static/picture/01.jpg" class="card-img-top" alt="이미지">
+                    let img_name = response[i]["image_name"]
+                    let img_src = "src"
+
+                    if (img_name === null || img_name === undefined) {
+                            img_src = `../static/picture/02.jpg`
+                        } else {
+                            img_src = `../static/posting_images/${user_nk}/board_${bd_id}/${img_name}`;
+                        }
+
+                    let temp_html = `<div class="card" style="width: 18rem;" onclick="location.href='/boards/${bd_id}'">
+                                        <img src=${img_src} class="card-img-top" alt="이미지">
                                         <div class="card-body">
                                             <h3 class="card-title">${title}</h3>
                                             <p class="card-text">${content}</p>

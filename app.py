@@ -17,6 +17,18 @@ import bcrypt
 # timedelta 는 정해진 시간을 표현하기 위해 사용됩니다.
 from datetime import timedelta
 
+access_key = [ACCESS_KEY]
+access_secret = [ACCESS_SECRET]
+bucket_name = [BUCKET_NAME]
+"""
+Connect to S3 Service 
+"""
+client_s3 = boto3.client(
+  's3',
+  aws_access_key_id=[ACCESS_KEY],
+  aws_secret_access_key=[ACCESS_SECRET]
+)
+
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
@@ -42,9 +54,28 @@ def home():  # 함수명은 중복이 불가
 @app.route('/mypage/uploader', methods=['GET','POST'])
 def uploader_file():
   if request.method == 'POST':
-    f = request.files['file']
-    fname = secure_filename(f.filename)
-    print(fname)
+    img = request.files['file']
+    fn = ''
+    if img:
+      filename=secure_filename(img.filename)
+      fn = filename
+      img.save(filename)
+      client_s3.upload_file(
+        Bucket=bucket_name,
+        Filename=filename,
+        Key=filename
+      )
+    print(fn)
+    st = 'https://{BUCKET_NAME}.s3.{REGION_NAME}.amazonaws.com/{FILE_NAME}'
+    user_nk = session.get('user_nk')
+    cur = db.cursor(pymysql.cursors.DictCursor)
+
+    sql = "update users set user_img = %s where user_nk = %s"
+    cur.execute(sql,(st,user_nk))
+    db.commit()
+    cur.close()
+  return redirect(url_for("mypage"))
+
 @app.route("/getMain/", methods=["GET"])
 def getMain():
   num = request.args.get('num');
@@ -56,6 +87,8 @@ def getMain():
   cur.execute(sql,((num*18)-17,num*18))
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
+  if len(curs) == 0:
+    return jsonify({'num': 'x'})
   cur.close()  # -> 커서를 닫아준다  #장바구니 반환
   # 3. 다시 메인html으로 보내준다.
   return jsonify(curs)
@@ -108,7 +141,7 @@ def login():
         session['user_id'] = user['user_id']
         return redirect(url_for("home"))  # 24 라인으로 보내버리기
       else:
-        return "에러발생"
+        return "<script>alert('에러발생');window.location.href='/login';</script>"
 
 
 # 로그아웃하기
@@ -158,7 +191,9 @@ def mypage():
   if param['user_site'] == None:
     param['user_site'] = session.get('user_nk') +'.5JIJO'
   curs.close()
-  return render_template('mypage.html' , param =param)
+  return render_template('mypage.html', param=param)
+
+
 @app.route("/mypage/fp", methods=["GET", "POST"])
 def mypagefp():
   user_fp = request.form['user_fp']
@@ -168,18 +203,22 @@ def mypagefp():
   curs.execute(sql,(user_fp,user_nk))
   db.commit();
   curs.close()
-  return jsonify({"msg":"프로필이 변경 되었습니다."})
+  return jsonify({"msg": "프로필이 변경 되었습니다."})
+
+
 @app.route("/mypage/site", methods=["GET", "POST"])
 def mypagesite():
   user_site = request.form['user_site']
   user_nk = session.get('user_nk')
   curs = db.cursor(pymysql.cursors.DictCursor)
-  sql ="update users set user_site = %s where user_nk = %s"
-  curs.execute(sql,(user_site,user_nk))
+  sql = "update users set user_site = %s where user_nk = %s"
+  curs.execute(sql, (user_site, user_nk))
   db.commit();
   curs.close()
-  return jsonify({"msg":"site가 변경 되었습니다."})
-@app.route('/mypage/del',methods=['POST'])
+  return jsonify({"msg": "site가 변경 되었습니다."})
+
+
+@app.route('/mypage/del', methods=['POST'])
 def delete_user():
   a = bool(session)
   if a== False:
@@ -193,7 +232,7 @@ def delete_user():
   curs.close()
   curs = db.cursor(pymysql.cursors.DictCursor)
   sql = 'delete from ojijo.board where user_nk =%s'
-  curs.execute(sql,user_nk)
+  curs.execute(sql, user_nk)
   db.commit()
   curs.close()
   curs = db.cursor(pymysql.cursors.DictCursor)
@@ -203,16 +242,17 @@ def delete_user():
   curs.close()
   return jsonify({'msg':'회원탈퇴 완료'})
 
+
 @app.route("/personal", methods=["GET", "POST"])
 def personal():
   return render_template('personal.html')
 
 @app.route("/personal/site", methods=["GET"])
 def get_personal():
-    user_nk = session.get("user_nk")
-    print(user_nk)
-    cur = db.cursor(pymysql.cursors.DictCursor)
-    sql = """select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate
+  user_nk = session.get("user_nk")
+  print(user_nk)
+  cur = db.cursor(pymysql.cursors.DictCursor)
+  sql = """select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate
             from users
             left join board on users.user_nk = board.user_nk
             where users.user_nk = %s
@@ -235,16 +275,17 @@ def post_save():
   bd_content = request.form['bd_content_give']
   user_nk = session.get("user_nk")
 
-  sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" %(bd_title, bd_content, user_nk)
+  sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" % (
+    bd_title, bd_content, user_nk)
 
   cur=db.cursor()
   cur.execute(sql)
   cur.fetchall()
   db.commit()
-  board_id=cur.lastrowid # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > board_id에 저장
+  board_id = cur.lastrowid  # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > board_id에 저장
   cur.close()
 
-  return jsonify({"result":board_id})
+  return jsonify({"result": board_id})
 
 @app.route('/post_up', methods=["POST"])
 def post_up():
@@ -290,6 +331,9 @@ def board(board_id):
   post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
 
   curs.close()  # -> 커서를 닫아준다
+
+  if post_detail_result == ():
+    return render_template("non_board.html")
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])
@@ -346,8 +390,6 @@ def delete_post():
     shutil.rmtree(folder_path)
 
   return jsonify({'msg': 1})
-
-
 
 
 if __name__ == '__main__':

@@ -22,9 +22,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="",
-                     db='ojijo',
-                     password='',
+                     user="root",
+                     db='sparta_test',
+                     password='1q2w3e4r',
                      charset='utf8')
 
 cur = db.cursor(pymysql.cursors.DictCursor)
@@ -382,9 +382,6 @@ def board_update(board_id):
 # 상세 게시물 페이지
 @app.route("/boards/<board_id>", methods=["GET"])
 def board(board_id):
-  if session.get("user_nk") is None:
-    return redirect(url_for("home"))
-
   board_id_receive = int(board_id)
 
   curs = db.cursor(pymysql.cursors.DictCursor)

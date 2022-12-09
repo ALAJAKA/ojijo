@@ -49,6 +49,10 @@
 - 추가 목표
   미정
   
+  
+배포
+<img width="677" alt="스크린샷 2022-12-09 오전 10 53 05" src="https://user-images.githubusercontent.com/116141914/206605831-a4124952-0787-4780-b865-65172fdebd48.png">
+
 일정
 
 2022.12.02 ~ 2022.12.05 각자 layout 만들기
@@ -70,10 +74,9 @@ v1.0.2 -CRUD구현 완료
 v1.0.3 -남는시간 추가기능 하고 싶은 것 정해서 구현하기
 
 -데이터 테이블(users,board)
+create database ojijo;<img width="674" alt="스크린샷 2022-12-09 오전 10 53 15" src="https://user-images.githubusercontent.com/116141914/206605811-e8d6129b-50fa-40ae-8762-30babc2dd82c.png">
 
   ```
-create database ojijo;
-
 use ojijo;
 
 create table users(

@@ -73,7 +73,7 @@ def getMain():
   print(num)
   # 1. 보드테이블 모든 게시물 정보를 가져온다
   cur = db.cursor(pymysql.cursors.DictCursor)  # 장바구니
-  sql = """SELECT id, bd_title, bd_content, user_nk, 
+  sql = """SELECT id, bd_title, bd_content, user_nk, bd_writeDate,
         (SELECT image FROM board_img AS bi WHERE bi.board_id = b.id LIMIT 1) AS image_name
         FROM board AS b ORDER BY b.id DESC limit %s,%s;"""
   cur.execute(sql, ((num * 18) - 18, num * 18))

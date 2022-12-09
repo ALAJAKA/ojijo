@@ -22,9 +22,9 @@ from datetime import timedelta
 # 디비 연결하기
 db = pymysql.connect(host="localhost",
                      port=3306,
-                     user="",
+                     user="root",
                      db='ojijo',
-                     password='',
+                     password='alskdjfh',
                      charset='utf8')
 
 cur = db.cursor(pymysql.cursors.DictCursor)
@@ -42,29 +42,29 @@ def home():  # 함수명은 중복이 불가
 
   return render_template('main.html')
 @app.route('/mypage/uploader', methods=['GET','POST'])
-def uploader_file():
-  if request.method == 'POST':
-    img = request.files['file']
-    fn = ''
-    if img:
-      filename=secure_filename(img.filename)
-      fn = filename
-      img.save(filename)
-      client_s3.upload_file(
-        Bucket=bucket_name,
-        Filename=filename,
-        Key=filename
-      )
-    print(fn)
-    st = 'https://{BUCKET_NAME}.s3.{REGION_NAME}.amazonaws.com/{FILE_NAME}'
-    user_nk = session.get('user_nk')
-    cur = db.cursor(pymysql.cursors.DictCursor)
-
-    sql = "update users set user_img = %s where user_nk = %s"
-    cur.execute(sql,(st,user_nk))
-    db.commit()
-    cur.close()
-  return redirect(url_for("mypage"))
+# def uploader_file():
+#   if request.method == 'POST':
+#     img = request.files['file']
+#     fn = ''
+#     if img:
+#       filename=secure_filename(img.filename)
+#       fn = filename
+#       img.save(filename)
+#       client_s3.upload_file(
+#         Bucket=bucket_name,
+#         Filename=filename,
+#         Key=filename
+#       )
+#     print(fn)
+#     st = 'https://{BUCKET_NAME}.s3.{REGION_NAME}.amazonaws.com/{FILE_NAME}'
+#     user_nk = session.get('user_nk')
+#     cur = db.cursor(pymysql.cursors.DictCursor)
+#
+#     sql = "update users set user_img = %s where user_nk = %s"
+#     cur.execute(sql,(st,user_nk))
+#     db.commit()
+#     cur.close()
+#   return redirect(url_for("mypage"))
 
 @app.route("/getMain/", methods=["GET"])
 def getMain():
@@ -253,11 +253,13 @@ def get_personal():
     user_nk = session.get("user_nk")
     print(user_nk)
     cur = db.cursor(pymysql.cursors.DictCursor)
-    sql = """select users.user_nk,user_img,user_fp,user_email,board.id,bd_title,bd_content,bd_writeDate
-            from users
-            left join board on users.user_nk = board.user_nk
-            where users.user_nk = %s
-            order by board.bd_writeDate desc;"""
+    sql = """select users.user_nk,user_img,user_fp,user_email,board.id,bd_title,bd_content,bd_writeDate,image
+              from users
+              left join board on users.user_nk = board.user_nk
+              left join board_img on board_img.board_id = board.id
+              where users.user_nk = %s
+              order by board.bd_writeDate desc;"""
+    print(sql)
     cur.execute(sql,user_nk)
     data = cur.fetchall()
     print(data)
@@ -382,8 +384,6 @@ def board_update(board_id):
 # 상세 게시물 페이지
 @app.route("/boards/<board_id>", methods=["GET"])
 def board(board_id):
-  if session.get("user_nk") is None:
-    return redirect(url_for("home"))
 
   board_id_receive = int(board_id)
 

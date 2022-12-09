@@ -37,16 +37,25 @@ function listing() {
                 let bd_content = rows[i]['bd_content']
                 let bd_writeDate = rows[i]['bd_writeDate']
                 let bd_id = rows[i]['id']
+                let bd_img = rows[i]['image']
+
+                let temp_html1 = `<div class="contents">
+                                    <a href="/boards/${bd_id}">${bd_title}</a>
+                                    <p>${bd_content}</p>
+                                    <div class="subinfo">${bd_writeDate} · 0개의 댓글 · ♥0</div>
+                                 </div>`
                 let temp_html2 = `<div class="contents">
                                     <a href="/boards/${bd_id}">
-                                    <div class="content_img"><img src="../static/personal_img/nap.png" alt="post-thumbnail" ></div>
+                                    <div class="content_img"><img src="../static/posting_images/${user_nk}/board_${bd_id}/${bd_img}" alt="post-thumbnail" ></div>
                                     </a>
                                     <a href="/boards/${bd_id}">${bd_title}</a>
                                     <p>${bd_content}</p>
                                     <div class="subinfo">${bd_writeDate} · 0개의 댓글 · ♥0</div>
                                  </div>`
-
-                $('#contents').append(temp_html2)
+                if (bd_img == null)
+                    $('#contents').append(temp_html1)
+                else
+                    $('#contents').append(temp_html2)
 
             }
         }

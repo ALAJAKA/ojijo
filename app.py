@@ -30,7 +30,7 @@ client_s3 = boto3.client(
 )
 
 # 디비 연결하기
-db = pymysql.connect(host="",
+db = pymysql.connect(host="localhost",
                      port=3306,
                      user="",
                      db='ojijo',
@@ -51,9 +51,7 @@ app.permanent_session_lifetime = timedelta(hours=1)
 def home():  # 함수명은 중복이 불가
 
   return render_template('main.html')
-
-
-@app.route('/mypage/uploader', methods=['GET', 'POST'])
+@app.route('/mypage/uploader', methods=['GET','POST'])
 def uploader_file():
   if request.method == 'POST':
     img = request.files['file']
@@ -81,12 +79,12 @@ def uploader_file():
 @app.route("/getMain/", methods=["GET"])
 def getMain():
   num = request.args.get('num');
-  num = int(num)
+  num =int(num)
   print(num)
   # 1. 보드테이블 모든 게시물 정보를 가져온다
   cur = db.cursor(pymysql.cursors.DictCursor)  # 장바구니
   sql = "SELECT * FROM board ORDER BY id desc limit %s,%s"
-  cur.execute(sql, ((num * 18) - 17, num * 18))
+  cur.execute(sql,((num*18)-17,num*18))
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
   if len(curs) == 0:
@@ -188,11 +186,10 @@ def mypage():
   sql = """select user_site, user_fp, user_img FROM users where user_nk=%s"""
   curs.execute(sql, (session.get('user_nk')))
   param = curs.fetchone()
-  print(param)
   if param['user_fp'] == None:
     param['user_fp'] = ''
   if param['user_site'] == None:
-    param['user_site'] = session.get('user_nk') + '.5JIJO'
+    param['user_site'] = session.get('user_nk') +'.5JIJO'
   curs.close()
   return render_template('mypage.html', param=param)
 
@@ -202,8 +199,8 @@ def mypagefp():
   user_fp = request.form['user_fp']
   user_nk = session.get('user_nk')
   curs = db.cursor(pymysql.cursors.DictCursor)
-  sql = "update users set user_fp = %s where user_nk = %s"
-  curs.execute(sql, (user_fp, user_nk))
+  sql ="update users set user_fp = %s where user_nk = %s"
+  curs.execute(sql,(user_fp,user_nk))
   db.commit();
   curs.close()
   return jsonify({"msg": "프로필이 변경 되었습니다."})
@@ -224,13 +221,13 @@ def mypagesite():
 @app.route('/mypage/del', methods=['POST'])
 def delete_user():
   a = bool(session)
-  if a == False:
+  if a== False:
     return redirect(url_for("home"))
   curs = db.cursor(pymysql.cursors.DictCursor)
   user_nk = session.get('user_nk')
   session.clear()
   sql = 'select id from users where user_nk =%s'
-  curs.execute(sql, user_nk)
+  curs.execute(sql,user_nk)
   id_1 = curs.fetchone()
   curs.close()
   curs = db.cursor(pymysql.cursors.DictCursor)
@@ -240,16 +237,15 @@ def delete_user():
   curs.close()
   curs = db.cursor(pymysql.cursors.DictCursor)
   sql = "DELETE FROM ojijo.users WHERE id = %s "
-  curs.execute(sql, id_1['id'])
+  curs.execute(sql,id_1['id'])
   db.commit()
   curs.close()
-  return jsonify({'msg': '회원탈퇴 완료'})
+  return jsonify({'msg':'회원탈퇴 완료'})
 
 
 @app.route("/personal", methods=["GET", "POST"])
 def personal():
   return render_template('personal.html')
-
 
 @app.route("/personal/site", methods=["GET"])
 def get_personal():
@@ -261,11 +257,10 @@ def get_personal():
             left join board on users.user_nk = board.user_nk
             where users.user_nk = %s
             order by board.bd_writeDate desc;"""
-  cur.execute(sql, user_nk)
-  data = cur.fetchall()
-  print(data)
-  return jsonify({'result': data})
-
+    cur.execute(sql,user_nk)
+    data = cur.fetchall()
+    print(data)
+    return jsonify({'result': data})
 
 @app.route("/write", methods=["GET", "POST"])
 def write():
@@ -283,7 +278,7 @@ def post_save():
   sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" % (
     bd_title, bd_content, user_nk)
 
-  cur = db.cursor()
+  cur=db.cursor()
   cur.execute(sql)
   cur.fetchall()
   db.commit()
@@ -291,7 +286,6 @@ def post_save():
   cur.close()
 
   return jsonify({"result": board_id})
-
 
 @app.route('/post_up', methods=["POST"])
 def post_up():
@@ -305,7 +299,7 @@ def post_up():
   db.commit()
   cur.close()
 
-  return jsonify({"result": id})
+  return jsonify({"result":id})
 
 
 # 상세글에서 수정 버튼 클릭 시
@@ -337,6 +331,9 @@ def board(board_id):
   post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
 
   curs.close()  # -> 커서를 닫아준다
+
+  if post_detail_result == ():
+    return render_template("non_board.html")
 
   doc = {"detail": post_detail_result[0]}
   print(doc["detail"])

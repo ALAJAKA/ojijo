@@ -18,9 +18,20 @@ import bcrypt
 # timedelta 는 정해진 시간을 표현하기 위해 사용됩니다.
 from datetime import timedelta
 
+access_key = [ACCESS_KEY]
+access_secret = [ACCESS_SECRET]
+bucket_name = [BUCKET_NAME]
+
+client_s3 = boto3.client(
+  's3',
+  aws_access_key_id=access_key,
+  aws_secret_access_key=access_secret
+)
+
+
 
 # 디비 연결하기
-db = pymysql.connect(host="localhost",
+db = pymysql.connect(host="",
                      port=3306,
                      user="",
                      db='ojijo',
@@ -56,7 +67,7 @@ def uploader_file():
         Key=filename
       )
     print(fn)
-    st = 'https://{BUCKET_NAME}.s3.{REGION_NAME}.amazonaws.com/{FILE_NAME}'
+    st = 'https://{BUCKET_NAME}.s3.{RESION_NAME}.amazonaws.com/{FILE_NAME}'
     user_nk = session.get('user_nk')
     cur = db.cursor(pymysql.cursors.DictCursor)
 

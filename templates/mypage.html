@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}끝{% endblock %}
+{% block title %}프로필{% endblock %}
 {% block head %}
     {{ super() }}
 <style>
@@ -77,7 +77,7 @@
             <div class="row">
               <div class ="col-md-3">
                 <div style="width: 100%; height:200px; ">
-                    <img src="{{param['user_img'] }}" style="width:200px; height: 200px;"/>
+                    <img src="{{param['user_img'] }}" style="margin-left:40px; width:200px; height: 200px; border-radius: 50px"/>
                 </div>
                   <form action="/mypage/uploader" method="POST" enctype="multipart/form-data">
                       <input type="file" id="imgup" name="file" style="display: none">
@@ -92,8 +92,8 @@
                 <div id="ff">
                     <span id ="user_fp">{{ param['user_fp'] }}</span>
                     <input style="height:30px; display: none;" type="text" class="form-control" id="userfp"  placeholder="프로필을 입력해주세요">
-                    <button id="savebtn" style="display: none" onclick="fpsave()">저장</button>
-                    <button id="up" onclick="view_btn()">수정하기</button>
+                    <button id="savebtn" style="display: none;border: 0; border-radius:10px; border: 1px solid black; background:#fff;" onclick="fpsave()">저장</button>
+                    <button id="up" onclick="view_btn()" style="border: 0; border-radius:10px; border: 1px solid black; background:#fff">수정하기</button>
                 </div>
               </div>
               <div class ="col-md-3"></div>
@@ -104,8 +104,8 @@
                   <input style="height:30px; display: none;" type="text" class="form-control" id="usersite"  placeholder="5jijo제목을 입력해주세요.">
                   </div>
                   <div class="col-md-8">
-                      <button id="up2" onclick="view_btn2()">수정하기</button>
-                      <button id="savebtn2" style="display: none" onclick="sitesave()">저장</button>
+                      <button id="up2" onclick="view_btn2()"style="border: 0; border-radius:10px; border: 1px solid black; background:#fff">수정하기</button>
+                      <button id="savebtn2" style="display: none;border: 0; border-radius:10px; border: 1px solid black; background:#fff" onclick="sitesave()">저장</button>
                   </div>
                 </div>
                   <div>나의 5jijo 제목 입니다.</div>
@@ -119,7 +119,7 @@
                   <div class="row">
                   <div class="col-md-3">회원 탈퇴</div>
                   <div class="col-md-8">
-                      <button onclick="userDel()">회원 탈퇴</button>
+                      <button onclick="userDel()" style="border: 0; border-radius:10px; border: 1px solid black; background:#fff">회원 탈퇴</button>
                   </div>
                 </div>
                 <div>탈퇴 시 작성하신 포스트 및 댓글이 모두 삭제되며 복구되지 않습니다.</div>

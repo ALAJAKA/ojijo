@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import os
 import shutil
+import json
 import boto3
 from botocore.exceptions import ClientError
 from werkzeug.utils import secure_filename
@@ -20,17 +21,17 @@ from datetime import timedelta
 access_key = [ACCESS_KEY]
 access_secret = [ACCESS_SECRET]
 bucket_name = [BUCKET_NAME]
-"""
-Connect to S3 Service 
-"""
+
 client_s3 = boto3.client(
   's3',
-  aws_access_key_id=[ACCESS_KEY],
-  aws_secret_access_key=[ACCESS_SECRET]
+  aws_access_key_id=access_key,
+  aws_secret_access_key=access_secret
 )
 
+
+
 # 디비 연결하기
-db = pymysql.connect(host="localhost",
+db = pymysql.connect(host="",
                      port=3306,
                      user="",
                      db='ojijo',
@@ -66,7 +67,7 @@ def uploader_file():
         Key=filename
       )
     print(fn)
-    st = 'https://{BUCKET_NAME}.s3.{REGION_NAME}.amazonaws.com/{FILE_NAME}'
+    st = 'https://{BUCKET_NAME}.s3.{RESION_NAME}.amazonaws.com/{FILE_NAME}'
     user_nk = session.get('user_nk')
     cur = db.cursor(pymysql.cursors.DictCursor)
 
@@ -78,17 +79,28 @@ def uploader_file():
 
 @app.route("/getMain/", methods=["GET"])
 def getMain():
-  num = request.args.get('num');
+  num = request.args.get('num')
   num =int(num)
   print(num)
   # 1. 보드테이블 모든 게시물 정보를 가져온다
   cur = db.cursor(pymysql.cursors.DictCursor)  # 장바구니
-  sql = "SELECT * FROM board ORDER BY id desc limit %s,%s"
-  cur.execute(sql,((num*18)-17,num*18))
+  sql = """SELECT id, bd_title, bd_content, user_nk, bd_writeDate,
+        (SELECT image FROM board_img AS bi WHERE bi.board_id = b.id LIMIT 1) AS image_name
+        FROM board AS b ORDER BY b.id DESC limit %s,%s;"""
+  cur.execute(sql, ((num * 18) - 18, num * 18))
   # 2. 변수에 담는다
   curs = cur.fetchall()  # -> 결과값을 전부 가져온다.
   if len(curs) == 0:
     return jsonify({'num': 'x'})
+
+  remove_text = ["<img >", "<div>", "</div>", "<br>"]
+  for i in range(len(curs)):
+    for text in remove_text:
+      if text == "</div>":
+        curs[i]["bd_content"] = curs[i]["bd_content"].replace(text, " ")
+      curs[i]["bd_content"] = curs[i]["bd_content"].replace(text, "")
+    curs[i]["bd_content"] = curs[i]["bd_content"].rstrip()
+
   cur.close()  # -> 커서를 닫아준다  #장바구니 반환
   # 3. 다시 메인html으로 보내준다.
   return jsonify(curs)
@@ -249,10 +261,10 @@ def personal():
 
 @app.route("/personal/site", methods=["GET"])
 def get_personal():
-  user_nk = session.get("user_nk")
-  print(user_nk)
-  cur = db.cursor(pymysql.cursors.DictCursor)
-  sql = """select users.user_nk,user_img,user_fp,user_email,bd_title,bd_content,bd_writeDate
+    user_nk = session.get("user_nk")
+    print(user_nk)
+    cur = db.cursor(pymysql.cursors.DictCursor)
+    sql = """select users.user_nk,user_img,user_fp,user_email,board.id,bd_title,bd_content,bd_writeDate
             from users
             left join board on users.user_nk = board.user_nk
             where users.user_nk = %s
@@ -270,51 +282,112 @@ def write():
 # 게시글 저장
 @app.route('/post_save', methods=["POST"])
 def post_save():
+  user_info_receive = json.loads(request.form.get("user_info"))
+  user_id_receive = user_info_receive["user_id"]
+  user_nk_receive = user_info_receive["user_nk"]
+  post_title_receive = user_info_receive["post_title"]
+  post_content_receive = user_info_receive["post_content"]
+  print(f'잘 들어옴? {user_id_receive, user_nk_receive, post_title_receive, post_content_receive}')
+
   cur = db.cursor(pymysql.cursors.DictCursor)
-  bd_title = request.form['bd_title_give']
-  bd_content = request.form['bd_content_give']
-  user_nk = session.get("user_nk")
-
-  sql = """insert into board (bd_title, bd_content, bd_updateDate, user_nk) Values ('%s', '%s', null, '%s');""" % (
-    bd_title, bd_content, user_nk)
-
-  cur=db.cursor()
-  cur.execute(sql)
-  cur.fetchall()
+  sql = "INSERT INTO board (bd_title, bd_content, user_nk) VALUES (%s, %s, %s)"
+  cur.execute(sql, (post_title_receive, post_content_receive, user_nk_receive))
+  board_id = cur.lastrowid
   db.commit()
-  board_id = cur.lastrowid  # sql문을 실행한 직후 마지막 데이터의 id값을 반환한다. > board_id에 저장
   cur.close()
 
-  return jsonify({"result": board_id})
+  img_count = 0
 
+  if request.files:
+    for value in request.files:  # 이미지 파일 갯수 만큼만 for 문을 돌릴 수 있어.
+      cur = db.cursor(pymysql.cursors.DictCursor)
+      sql = "INSERT INTO board_img (user_nk, board_id, image) VALUES (%s, %s, %s)"
+      cur.execute(sql, (user_nk_receive, board_id, request.files[value].filename))
+      db.commit()
+      cur.close()
+
+      os.makedirs(f'./static/posting_images/{user_nk_receive}/board_{board_id}', exist_ok=True)
+      f = request.files[f"img_{img_count}"]
+      f.save(f'./static/posting_images/{user_nk_receive}/board_{board_id}/' + f.filename)
+      img_count += 1
+
+  return jsonify({'msg': 1})
+
+
+# 상세 게시글 수정을 실행.
 @app.route('/post_up', methods=["POST"])
 def post_up():
-  id = request.form["bd_id_give"]
-  bd_title = request.form["bd_title_give"]
-  bd_content = request.form["bd_content_give"]
+  user_info_receive = json.loads(request.form.get("user_info"))
+  user_id_receive = user_info_receive["user_id"]
+  user_nk_receive = user_info_receive["user_nk"]
+  board_id_receive = int(user_info_receive["board_id"])
+  post_title_receive = user_info_receive["post_title"]
+  post_content_receive = user_info_receive["post_content"]
+  print(f'잘 들어옴? {user_id_receive, user_nk_receive, post_title_receive, post_content_receive}')
 
   cur = db.cursor()
-  sql = "UPDATE board SET bd_title = %s, bd_content = %s WHERE id = %s"
-  cur.execute(sql, (bd_title, bd_content, id))
+  sql = "UPDATE board SET bd_title = %s, bd_content = %s, bd_updateDate = default WHERE id = %s"
+  cur.execute(sql, (post_title_receive, post_content_receive, board_id_receive))
+  db.commit()
+
+  # 걍 다 지워버리자 이미지 테이블은.
+  sql = "DELETE FROM board_img WHERE board_id = %s"
+  cur.execute(sql, board_id_receive)
   db.commit()
   cur.close()
 
-  return jsonify({"result":id})
+  if os.path.exists(f'./static/posting_images/{user_nk_receive}/board_{board_id_receive}'):
+    shutil.rmtree(f'./static/posting_images/{user_nk_receive}/board_{board_id_receive}')
+
+  img_count = 0
+
+  if request.files:
+    for value in request.files:  # 이미지 파일 갯수 만큼만 for 문을 돌릴 수 있어.
+      cur = db.cursor(pymysql.cursors.DictCursor)
+      sql = "INSERT INTO board_img (user_nk, board_id, image) VALUES (%s, %s, %s)"
+      cur.execute(sql, (user_nk_receive, board_id_receive, request.files[value].filename))
+      db.commit()
+      cur.close()
+
+      os.makedirs(f'./static/posting_images/{user_nk_receive}/board_{board_id_receive}', exist_ok=True)
+      f = request.files[f"img_{img_count}"]
+      f.save(f'./static/posting_images/{user_nk_receive}/board_{board_id_receive}/' + f.filename)
+      img_count += 1
+
+  return jsonify({"msg": 2, "result": board_id_receive})
 
 
 # 상세글에서 수정 버튼 클릭 시
 @app.route('/write/<board_id>', methods=["GET"])
 def board_update(board_id):
+  if session.get("user_nk") is None:
+    return redirect(url_for("home"))
+
   board_id_receive = int(board_id)
 
   curs = db.cursor(pymysql.cursors.DictCursor)
-  sql = "SELECT id, bd_title, bd_content, user_nk FROM board WHERE id = %s"
+
+  sql = """SELECT b.id, b.bd_title, b.bd_content, b.user_nk, u.user_email
+    , u.user_site, u.user_img, u.user_fp FROM board AS b 
+    INNER JOIN users AS u ON b.user_nk = u.user_nk WHERE b.id = %s;"""
   curs.execute(sql, board_id_receive)
-  board_result = curs.fetchone()  # -> 결과값을 1개만 가져올 듯.
+  post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
+
+  sql = "select * from board_img where board_id = %s"
+  curs.execute(sql, board_id_receive)
+  img_detail_result = curs.fetchall()
 
   curs.close()  # -> 커서를 닫아준다
 
-  return render_template('post_write.html', status="1", board=board_result)
+  if post_detail_result == ():
+    return render_template("non_board.html")
+
+  doc = {"detail": post_detail_result[0]}
+  if img_detail_result != ():
+    doc["images"] = img_detail_result
+
+  return render_template("update_write.html", status="1", detailDict=doc)
+
 
 
 # 상세 게시물 페이지
@@ -330,15 +403,20 @@ def board(board_id):
   curs.execute(sql, board_id_receive)
   post_detail_result = curs.fetchall()  # -> 결과값을 1개만 가져온다.
 
+  sql = "select * from board_img where board_id = %s"
+  curs.execute(sql, board_id_receive)
+  img_detail_result = curs.fetchall()
+
   curs.close()  # -> 커서를 닫아준다
 
   if post_detail_result == ():
     return render_template("non_board.html")
 
   doc = {"detail": post_detail_result[0]}
-  print(doc["detail"])
+  if img_detail_result != ():
+    doc["images"] = img_detail_result
 
-  return render_template("board.html", user_nk=session.get("user_nk"), detailDict=doc)
+  return render_template("board.html", detailDict=doc)
 
 
 # 상세 게시물 페이지에서 이전, 이후 페이지 값 가져 오기

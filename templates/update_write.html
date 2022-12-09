@@ -52,6 +52,7 @@
     <script>
         // 페이지를 띄운 곳이 "새 글 작성" 인지, "수정하기" 인지를 판단.
         $(document).ready(function () {
+            check_status();
 
             // 이미지 업로드 관련
             const btnImage = document.getElementById('btn-image');
@@ -88,6 +89,50 @@
         });
 
 
+        const check_status = () => {
+            const receive_var = `{{status}}`
+            console.log("아니 이게? : " + typeof receive_var)
+            if (receive_var === "0") {
+                return;
+            } else if (receive_var === "1") {
+                const check_btn = document.querySelector("#insert-or-update")
+                check_btn.innerHTML = "수정하기"
+                const before_content = `{{detailDict['detail']['bd_content']}}`
+                const after_content = before_content.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+                $("#editor").append(after_content); // innerHTML
+                $("#result2").append(after_content)
+
+                const bd_title = `{{detailDict['detail']['bd_title']}}`
+                $("#bd_title").append(bd_title)
+                $("#result").append(bd_title)
+
+                const before_imgObj = `{{detailDict['images']}}`    // [{}, {}]
+                if (before_imgObj[0] === "[") {
+                    const after_imgObj = eval(before_imgObj.replace(/&#39;/g, "'")) // 특수문자들을 원래의 문자로 되돌린 후 문자열을 코드로 인식하게 바꿔줌.
+
+                    const all_img = document.querySelectorAll("#editor img");
+                    const mirror = document.querySelectorAll("#result2 img");
+
+                    for (let i = 0; i < after_imgObj.length; i++) {
+                        const img_obj = after_imgObj[i]
+                        const path = `../static/posting_images/${img_obj["user_nk"]}/board_${img_obj["board_id"]}/${img_obj["image"]}`
+                        console.log('path : ' + path)
+                        all_img[`${i}`].src = path;
+                        all_img[`${i}`].style.maxWidth = "95%";
+                        all_img[`${i}`].style.display = "block";
+                        all_img[`${i}`].style.margin = "auto";
+                        mirror[`${i}`].src = path;
+                        mirror[`${i}`].style.maxWidth = "95%";
+                        mirror[`${i}`].style.display = "block";
+                        mirror[`${i}`].style.margin = "auto";
+                    }
+                } else {
+                    return
+                }
+
+            }
+        }
+
         function bdScroll(obj) {
             obj.style.height = '2px';
             obj.style.height = (12 + obj.scrollHeight) + 'px';
@@ -106,11 +151,12 @@
             document.getElementById("result2").innerHTML = editor
         }
 
-        // DB로 포스트를 저장할거야. 혹은 수정.
+        // DB로 포스트를 insert 혹은 update
         const posting = async () => {
             const check_status = "{{status}}"
             const user_id = "{{session['user_id']}}"
             const user_nk = "{{session['user_nk']}}"
+            const board_id = `{{detailDict['detail']['id']}}`
             const title = document.getElementById("bd_title").value;
             const content = document.getElementById("editor").innerHTML
 
@@ -149,6 +195,7 @@
                 user_id: user_id,
                 user_nk: user_nk,
                 post_title: title,
+                board_id: board_id,
                 post_content: without_img_src
             });
 
